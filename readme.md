@@ -1,2 +1,2 @@
-##Flat-Planner
-#An editorial planning app for magazines
+#Flat-Planner
+##An editorial planning app for magazines
