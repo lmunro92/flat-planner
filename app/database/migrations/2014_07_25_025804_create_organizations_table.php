@@ -15,6 +15,7 @@ class CreateOrganizationsTable extends Migration {
 		Schema::create('organizations', function($table){
 			$table->increments('id');
 			$table->string('name')->unique();
+			$table->string('slug')->unique();
 			$table->string('image_url');
 			$table->text('description');
 			$table->string('city');

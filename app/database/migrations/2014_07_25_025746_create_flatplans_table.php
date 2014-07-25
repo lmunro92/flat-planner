@@ -15,6 +15,7 @@ class CreateFlatplansTable extends Migration {
 		Schema::create('flatplans', function($table) {
 			$table->increments('id');
 			$table->string('issue_name');
+			$table->string('slug');
 			$table->integer('pub_date');
 			$table->integer('organization_id')->unsigned();
 			$table->integer('user_id')->unsigned();
