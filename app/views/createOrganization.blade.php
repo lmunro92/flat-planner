@@ -15,7 +15,7 @@
 	</div>
 	<div class="form-line">
 		{{Form::label('image_url', 'Logo: ');}}
-		{{Form::file('image_url', array('class'=>'flat-file-input', 'size'=>'50'));}}
+		{{Form::file('image_url', array('class'=>'flat-text', 'size'=>'50'));}}
 	</div>
 	<div class="form-line">
 		{{Form::label('city', 'City: ');}}
