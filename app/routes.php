@@ -12,28 +12,39 @@
 */
 
 Route::get('/', function(){
-	echo "landing page";
-	//return View::make('landing');
+	return View::make('welcome');
 });
 
 #create a new organization
-Route::get('/new-organization', function() {
-	echo "create a new organization";
+Route::get('/create-organization', function() {
+	return View::make('createOrganization');
 });
 
 #handle new organzation submission
-Route::post('/new-organization', function(){
+Route::post('/create-organization', function(){
 	//
 });
 
 #add a new user
-Route::get('/new-user', function() {
-	echo "Create a new user.";
+Route::get('/create-user', function() {
+	return View::make('createUser');
 });
 
 #handle new user submission
-Route::post('new-user', function() {
+Route::post('create-user', function() {
 
+});
+
+Route::get('create-flatplan', function() {
+	return View::make('createFlatplan');
+});
+
+Route::get('create-page', function() {
+	return View::make('createPage');
+});
+
+Route::get('view-page', function() {
+	return View::make('viewPage');
 });
 
 #show a specific user

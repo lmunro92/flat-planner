@@ -1,0 +1,55 @@
+body{
+	margin: 0;
+}
+
+header{
+	position: fixed;
+	width: 100%;
+	background-color: white;
+	border-bottom: 4px solid black;
+}
+
+article {
+	padding-top: 120px;
+
+
+}
+
+div.logo-box{
+	width: 100px;
+	float: left;
+	margin: 10px 30px;
+}
+
+img.fplogo{
+	width: 100%;
+}
+
+div.credentials {
+	position: absolute;
+	right: 15px;
+	top: 65px;
+
+}
+
+
+
+div.bottom-nav ul {
+
+
+}
+
+div.bottom-nav ul li {
+
+
+}
+
+div.bottom-center{
+
+
+}
+
+p.copyright {
+
+
+}
