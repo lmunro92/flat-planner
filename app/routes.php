@@ -3,7 +3,6 @@
 /*
 |--------------------------------------------------------------------------
 | Application Routes
-|--------------------------------------------------------------------------
 |
 | Here is where you can register all of the routes for an application.
 | It's a breeze. Simply tell Laravel the URIs it should respond to
@@ -14,6 +13,18 @@
 Route::get('/', function(){
 	return View::make('welcome');
 });
+
+### Using Controllers for Routes
+Route::get('/create-organization', 'OrganizationController@getCreateOrganization');
+Route::post('/create-organization', 'OrganizationController@postCreateOrganization');
+Route::get('/{organization}', 'OrganizationController@getOrganization');
+### End Controllers
+
+
+
+
+/*
+
 
 #create a new organization
 Route::get('/create-organization', function() {
@@ -45,6 +56,22 @@ Route::get('create-page', function() {
 
 Route::get('view-page', function() {
 	return View::make('viewPage');
+});
+
+Route::get('login', function() {
+	return View::make('login');
+});
+
+Route::get('view-organization', function() {
+	return View::make('viewOrganization');
+});
+
+Route::get('view-user', function() {
+	return View::make('viewUser');
+});
+
+Route::get('change-password', function() {
+	return View::make('changePassword');
 });
 
 #show a specific user
@@ -81,6 +108,7 @@ Route::get('/user/{username}/assignments', array(function($username) {
 Route::get('/user/{username}/assignment/{assignment}', array(function($username, $assignment) {
 	echo "show assignment number ".$assignment." for ".$username;
 }));
+
 
 #show an organization homepage
 Route::get('/{organization}', function ($organization) {
@@ -156,3 +184,4 @@ Route::post('/{organization}/{flatplan}/{page}/assign', array(function($organiza
 
 }));
 
+*/

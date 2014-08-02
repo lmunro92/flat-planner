@@ -3,36 +3,47 @@
 class OrganizationController extends \BaseController {
 
 	/**
-	 * Display a listing of the resource.
+	 * Show a single Organization page
 	 *
-	 * @return Response
+	 * @param string $organization
+	 * @return response
 	 */
-	public function index()
+	public function getOrganization ($organization)
 	{
-		//
+		return View::make('viewOrganization');
 	}
-
 
 	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
+	* Create a new Organization
+	*
+	*	@return Response
+	*/
+	public function getCreateOrganization ()
 	{
-		//
+			return View::make('createOrganization');
 	}
-
 
 	/**
-	 * Store a newly created resource in storage.
+	 * Store the new organization.
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function postCreateOrganization()
 	{
-		//
+		
+		$org = new Organization();
+		$org->name = Input::get('organization-name');
+		$slug = $this->create_slug(Input::get('organization-name'));
+		$org->slug = $slug;
+		$org->image_url = Input::get('image_url');
+		$org->description = Input::get('description');
+		$org->city = Input::get('city');
+		$org->state = Input::get('state');
+		$org->country = Input::get('country');
+		//$org->save();
+		return Redirect::to('/'.$slug);
 	}
+
 
 
 	/**
@@ -82,5 +93,19 @@ class OrganizationController extends \BaseController {
 		//
 	}
 
-
+	/**
+	 *	Helper function for creating slugs
+	 *
+	 *	@param the name to be slugged
+	 *	@return string 
+	 */
+	private static function create_slug($name)
+	{
+		$slug = strtolower($name);
+		$slug = preg_replace('#[^a-z0-9 ]#', '', $slug);
+		$slug = preg_replace('#\s+#', ' ', $slug);
+		$slug = preg_replace('#\s#', '-', $slug);
+		echo $slug;
+		return $slug;
+	}
 }
