@@ -43,6 +43,7 @@ class FlatplanController extends \BaseController {
 			$page = new Page();
 			$page->page_number = $cover;
 			$page->flatplan_id = $flatplan->id;
+			$page->cover = true;
 			$page->save();
 		}
 		if(Input::get('pages')){
@@ -77,8 +78,9 @@ class FlatplanController extends \BaseController {
 		catch(Exception $e) {
 			return View::Make('fourOhFour');
 		}
-		$pages = Page::where('flatplan_id', '=', $flatplan->id)->get();
-		return View::make('viewFlatplan')->with('flatplan', $flatplan)->with('org', $org)->with('pages', $pages);
+		$pages = Page::where('flatplan_id', '=', $flatplan->id)->where('cover', '=', false)->get();
+		$covers = Page::where('flatplan_id', '=', $flatplan->id)->where('cover', '=', true)->get();
+		return View::make('viewFlatplan')->with('flatplan', $flatplan)->with('org', $org)->with('pages', $pages)->with('covers', $covers);
 	}
 
 	/**
@@ -88,6 +90,7 @@ class FlatplanController extends \BaseController {
 	 */
 	private function match_pages($flatplan){
 		$pages = Page::where('flatplan_id', '=', $flatplan->id)->get();
+		//$pages = $pages->sortBy('page_number');
 		foreach($pages as $page){
 			if($page->page_number == 'COVER'){
 				$page->spread_page_id = $pages->filter(function($item){return $item->page_number == 'BACK';})->first()->id;
@@ -109,18 +112,29 @@ class FlatplanController extends \BaseController {
 				$page->spread_page_id = $pages->filter(function($item){return $item->page_number == 'IFC';})->first()->id;
 				$page->save();
 			}
-			elseif($page->page_number == count($pages)){
+			elseif($page->page_number == count($pages)-4){
 				$page->spread_page_id = $pages->filter(function($item){return $item->page_number == 'IBC';})->first()->id;
 				$page->save();
 			}
-			elseif($page->page_number == count($pages)-1){
-				$page->spread_page_id = $pages->last()->id-1;
-			}
-			elseif((int)($page->page_number) % 2 == 0){
-				$page->spread_page_id = ($page->id)+1;
+			elseif(((int)($page->page_number)) % 2 == 0){
+				try{
+					$pageOpp = Page::where('flatplan_id', '=', $page->flatplan_id)->where('page_number', '=', ($page->page_number) + 1)->firstOrFail();
+				}
+				catch(Exception $e){
+					break;
+				}
+				$page->spread_page_id = $pageOpp->id;
+				$page->save();
 			}
 			else{
-				$page->spread_page_id = ($page->id)-1;
+				try{
+					$pageOpp = Page::where('flatplan_id', '=', $page->flatplan_id)->where('page_number', '=', ($page->page_number) - 1)->firstOrFail();
+				}
+				catch(Exception $e){
+					break;
+				}
+				$page->spread_page_id = $pageOpp->id;
+				$page->save();
 			}
 		}
 	}

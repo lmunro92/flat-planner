@@ -18,34 +18,67 @@
 </div>
 
 <div class="flatplan-graphics">
+
+
 	<div class="flatplan-cover">
+		<div class="flatplan-page">
+			<p>{{$covers->filter(function($page){return $page->page_number == 'COVER';})->first()->slug;}}</p>
+		</div>
+		<div class="page-numbers">
+			<div class="page-number">
+				<p>{{$covers->filter(function($page){return $page->page_number == 'COVER';})->first()->page_number;}}</p>
+			</div>
+		</div>
 	</div>
+
+
 	<div class="flatplan-inside-cover">
+		<div class="flatplan-page">
+			<p>{{$covers->filter(function($page){return $page->page_number == 'IFC';})->first()->slug;}}</p>
+		</div>
+		<div class="page-numbers">
+			<div class="page-number">
+				<p>{{$covers->filter(function($page){return $page->page_number == 'IFC';})->first()->page_number;}}</p>
+			</div>
+		</div>
 	</div>
-	@for($i = 2; $i < count($pages); $i += 2)
-		<?php $page = Page::where('page_number', '=', $i)->first(); ?>
-		<?php $pageOpp = Page::where('id','=', $page->spread_page_id)->first(); ?>
-		<?php dd($pageOpp); ?>
+
+
+	@foreach($pages as $page)	
 		<div class="flatplan-spread">
 			<div class="flatplan-page">
 				<p>{{{$page->slug}}}</p>
-			</div>
-			<div class="flatplan-page">
-				<p>{{{$pageOpp->slug}}}</p>
 			</div>
 		</div>
 		<div class="page-numbers">
 			<div class="page-number">
 				<p>{{{$page->page_number}}}</p>
 			</div>
+		</div>
+	@endforeach
+
+
+	<div class="flatplan-inside-back">
+		<div class="flatplan-page">
+			<p>{{$covers->filter(function($page){return $page->page_number == 'IBC';})->first()->slug;}}</p>
+		</div>
+		<div class="page-numbers">
 			<div class="page-number">
-				<p>{{{$pageOpp->page_number}}}</p>
+				<p>{{$covers->filter(function($page){return $page->page_number == 'IBC';})->first()->page_number;}}</p>
 			</div>
 		</div>
-	@endfor
-	<div class="flatplan-inside-back">
 	</div>
+
+
 	<div class="flatplan-back">
+		<div class="flatplan-page">
+			<p>{{$covers->filter(function($page){return $page->page_number == 'BACK';})->first()->slug;}}</p>
+		</div>
+		<div class="page-numbers">
+			<div class="page-number">
+				<p>{{$covers->filter(function($page){return $page->page_number == 'BACK';})->first()->page_number;}}</p>
+			</div>
+		</div>		
 	</div>
 </div>
 
