@@ -15,6 +15,7 @@ class CreatePagesTable extends Migration {
 		Schema::create('pages', function($table){
 			$table->increments('id');
 			$table->string('page_number');
+			$table->boolean('cover')->default(false);
 			$table->string('slug')->nullable();
 			$table->text('notes')->nullable();
 			$table->string('color')->default('white');

@@ -16,7 +16,7 @@ class CreateFlatplansTable extends Migration {
 			$table->increments('id');
 			$table->string('name');
 			$table->string('slug');
-			$table->integer('pub_date')->nullable();
+			$table->string('pub_date')->nullable();
 			$table->integer('organization_id')->unsigned();
 			$table->integer('user_id')->unsigned();
 			$table->timestamps();
