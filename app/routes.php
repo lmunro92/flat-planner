@@ -27,7 +27,7 @@ Route::get('/{slug}/create-flatplan/', 'FlatplanController@getCreateFlatplan');
 Route::post('/{slug}/create-flatplan/', 'FlatplanController@postCreateFlatplan');
 Route::get('/{slug}/{plan}', 'FlatplanController@getViewFlatplan');
 Route::get('/{slug}/{plan}/edit', 'FlatplanController@getEditFlatplan');
-Route::post('/{slug}/{plan}/edit', 'FlatplanController@getEditFlatplan');
+Route::put('/{slug}/{plan}/edit', 'FlatplanController@putEditFlatplan');
 
 ### End Controllers
 

@@ -8,6 +8,7 @@
 <div class="flatplan-info">
 	<div class="flatplan-name">
 		<h2>{{{$flatplan->name}}}</h2>
+		<p><a href="/{{$org['slug']}}/{{$flatplan['slug']}}/edit">Edit</a></p>
 	</div>
 	<div class="flatplan-page-count">
 		<p>{{count($pages)}} pages</p>

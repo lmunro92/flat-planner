@@ -73,7 +73,7 @@ class FlatplanController extends \BaseController {
 			return View::Make('fourOhFour');
 		}
 		try{
-			$flatplan = Flatplan::where('slug', '=', $plan)->firstOrFail();
+			$flatplan = Flatplan::where('organization_id', '=', $org->id)->where('slug', '=', $plan)->firstOrFail();
 		}
 		catch(Exception $e) {
 			return View::Make('fourOhFour');
@@ -81,6 +81,55 @@ class FlatplanController extends \BaseController {
 		$pages = Page::where('flatplan_id', '=', $flatplan->id)->where('cover', '=', false)->get();
 		$covers = Page::where('flatplan_id', '=', $flatplan->id)->where('cover', '=', true)->get();
 		return View::make('viewFlatplan')->with('flatplan', $flatplan)->with('org', $org)->with('pages', $pages)->with('covers', $covers);
+	}
+
+	/**
+	 * Edit a flatplan
+	 *
+	 * @param $slug slug of the organization
+	 * @param $plan slug of the flatplan
+	 * @return response
+	 */
+	public function getEditFlatplan($slug, $plan) {
+		try{
+			$org = Organization::where('slug', '=', $slug)->firstOrFail();
+		}
+		catch(Exception $e) {
+			return View::Make('fourOhFour');
+		}
+		try{
+			$flatplan = Flatplan::where('organization_id', '=', $org->id)->where('slug', '=', $plan)->firstOrFail();
+		}
+		catch(Exception $e) {
+			return View::Make('fourOhFour');
+		}
+		return View::make('editFlatplan')->with('org', $org)->with('flatplan', $flatplan);
+	}
+
+	/**
+	*	Handle edits to flatplan
+	*
+	* @param $slug slug of the organization
+	* @param $plan slug of the flatplan
+	* @return response
+	*/
+	public function putEditFlatplan($slug, $plan){
+		try{
+			$org = Organization::where('slug', '=', $slug)->firstOrFail();
+		}
+		catch(Exception $e) {
+			return View::Make('fourOhFour');
+		}
+		try{
+			$flatplan = Flatplan::where('organization_id', '=', $org->id)->where('slug', '=', $plan)->firstOrFail();
+		}
+		catch(Exception $e) {
+			return View::Make('fourOhFour');
+		}
+		$flatplan->name = Input::get('name');
+		$flatplan->pub_date = Input::get('publication_date');
+		$flatplan->save();
+		return Redirect::to('/'.$org->slug.'/'.$flatplan->slug)->with('flash_message', 'Update Successful');
 	}
 
 	/**
