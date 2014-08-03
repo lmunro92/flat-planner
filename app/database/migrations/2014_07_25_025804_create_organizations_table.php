@@ -16,11 +16,12 @@ class CreateOrganizationsTable extends Migration {
 			$table->increments('id');
 			$table->string('name')->unique();
 			$table->string('slug')->unique();
-			$table->string('image_url');
-			$table->text('description');
-			$table->string('city');
-			$table->string('state');
-			$table->string('country');
+			$table->string('image_url')->nullable();
+			$table->string('website_url')->nullable();
+			$table->text('description')->nullable();
+			$table->string('city')->nullable();
+			$table->string('state')->nullable();
+			$table->string('country')->nullable();
 			$table->timestamps();
 		});
 	}

@@ -14,20 +14,20 @@ class CreatePagesTable extends Migration {
 	{
 		Schema::create('pages', function($table){
 			$table->increments('id');
-			$table->integer('number');
-			$table->string('slug');
-			$table->text('notes');
-			$table->string('color');
-			$table->string('image_url');
-			$table->boolean('copy');
-			$table->boolean('edit');
-			$table->boolean('art');
-			$table->boolean('design');
-			$table->boolean('approve');
-			$table->boolean('proofread');
-			$table->boolean('close');
+			$table->string('page_number');
+			$table->string('slug')->nullable();
+			$table->text('notes')->nullable();
+			$table->string('color')->default('white');
+			$table->string('image_url')->nullable();
+			$table->boolean('copy')->default(false);
+			$table->boolean('edit')->default(false);
+			$table->boolean('art')->default(false);
+			$table->boolean('design')->default(false);
+			$table->boolean('approve')->default(false);
+			$table->boolean('proofread')->default(false);
+			$table->boolean('close')->default(false);
 			$table->integer('flatplan_id')->unsigned();
-			$table->integer('spread_page_id')->unsigned();
+			$table->integer('spread_page_id')->unsigned()->nullable();
 			$table->timestamps();
 		});
 	}
