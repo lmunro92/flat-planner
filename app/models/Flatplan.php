@@ -3,15 +3,15 @@
 class Flatplan extends Eloquent {
 
 	public function user() {
-		$this->belongsTo('User');
+		return $this->belongsTo('User');
 	}
 
 	public function organization() {
-		$this->belongsTo('Organization');
+		return $this->belongsTo('Organization');
 	}
 
 	public function pages() {
-		$this->hasMany('Page');
+		return $this->hasMany('Page');
 	}
 
 }

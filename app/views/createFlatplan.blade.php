@@ -5,11 +5,11 @@
 @stop
 
 @section('content')
-{{Form::open(array('url'=>'/create-flatplan/', 'method'=>'POST', 'class'=>'fp-form'));}}
+{{Form::open(array('url'=>'/'.$org['slug'].'/create-flatplan', 'method'=>'POST', 'class'=>'fp-form'));}}
 
 	<div class="form-line">
-		{{Form::label('flatplan-name', 'Flatplan Name: ');}}
-		{{Form::text('flatplan-name', '', array('class'=>'flat-text', 'size'=>'50'));}}
+		{{Form::label('name', 'Flatplan Name: ');}}
+		{{Form::text('name', '', array('class'=>'flat-text', 'size'=>'50'));}}
 	</div>
 	<div class="form-line">
 		{{Form::label('publication_date', 'Publication Date: ');}}
@@ -18,8 +18,6 @@
 	<div class="form-line">
 		{{Form::label('pages', 'Number of Pages: ');}}
 		{{Form::text('pages', '', array('class'=>'flat-number', 'size'=>'15'));}}
-		{{Form::checkbox('covers', 0, array('class'=>'flat-check'));}}
-		{{Form::label('covers', '+4 (Covers)');}}
 	</div>
 	<div class="form-line">
 		{{Form::submit('Create');}}

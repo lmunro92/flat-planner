@@ -3,21 +3,25 @@
 @extends('layouts._master')
 
 @section('banner')
-	<h1>_______________ User</h1>
+	<h1>{{{$user['first_name']}}} {{{$user['last_name']}}}</h1>
 @stop
 
 {{--show the logo and vital info of the org in the top-left corner --}}
 @section('content')
 <div class="nameplate">
 	<div class="nameplate-image">
-		<img src="" alt="Jonathan Seitz" />
+		<img src="{{{$user['image_url']}}}" alt="{{{$user['first_name']}}} {{{$user['last_name']}}}" />
 	</div>
 	<div class="nameplate-name">
-		<p>Jonathan Seitz<p>
+		<p>{{{$user['first_name']}}} {{{$user['last_name']}}}<p>
+		<p>{{{$user['username']}}}</p>
 	</div>
 	<div class="nameplate-vitals">
-		<p>Somerville, Massachusetts USA</p>
-		<p>Writer, editor, etc.</p>
+		<p>{{{$user['city']}}}, {{{$user['state']}}} {{{$user['country']}}}</p>
+		<p>{{{$user['profile']}}}</p>
+	</div>
+	<div class="nameplate-edit">
+		<p><a href="/user/{{$user['username']}}/edit">Edit User</a></p>
 	</div>
 </div>
 
@@ -28,18 +32,26 @@
 		<div class="list-col1">
 			<h4>Name</h4>
 		</div>
-		<div class="list-col2">
+		<div class="list-col">
 			<h4>Title</h4>
 		</div>
+		<div class="list-col">
+			<h4>Permissions</h4>
+		</div>
 	</div>
+	@foreach($roles as $role)
 	<div class="list-line">
-		<div class="list-line">
-			<p>Flat-Planner</p>
+		<div class="list-col">
+			<p><a href="/{{$role->organization->slug}}">{{$role->organization->name}}</a></p>
 		</div>
-		<div class="list-line">
-			<p>Founder</p>
+		<div class="list-col">
+			<p>{{$role->title}}</p>
+		</div>
+		<div class="list-col">
+			<p>can {{$role->permissions}}</p>
 		</div>
 	</div>
+	@endforeach
 </div>
 
 {{-- Listing of all outstanding assignment on bottom --}}

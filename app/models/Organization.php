@@ -3,11 +3,11 @@
 class Organization extends Eloquent {
 
 	public function roles() {
-		$this->hasMany('Role');
+		return $this->hasMany('Role');
 	}
 
 	public function flatplans() {
-		$this->hasMany('Flatplan');
+		return $this->hasMany('Flatplan');
 	}
 
 }

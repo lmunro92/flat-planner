@@ -15,4 +15,19 @@ class BaseController extends Controller {
 		}
 	}
 
+	/**
+	 *	Helper function for creating slugs
+	 *
+	 *	@param the name to be slugged
+	 *	@return string 
+	 */
+	function create_slug($name)
+	{
+		$slug = strtolower($name);
+		$slug = preg_replace('#[^a-z0-9 ]#', '', $slug);
+		$slug = preg_replace('#\s+#', ' ', $slug);
+		$slug = preg_replace('#\s#', '-', $slug);
+		echo $slug;
+		return $slug;
+	}
 }

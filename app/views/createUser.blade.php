@@ -6,7 +6,7 @@
 @stop
 
 @section('content')
-{{Form::open(array('url'=>'/create-user/', 'method'=>'POST', 'class'=>'fp-form'))}}
+{{Form::open(array('url'=>'/user/', 'method'=>'POST', 'class'=>'fp-form'))}}
 	<div class="form-line">
 		{{Form::label('first-name', 'First Name: ')}}
 		{{Form::text('first-name', '', array('class'=>'flat-text', 'size'=>'20'))}}
@@ -14,7 +14,7 @@
 		{{Form::text('last-name', '', array('class'=>'flat-text', 'size'=>'20'))}}
 	</div>
 	<div class="form-line">
-		{{Form::label('username', 'Organization Name')}}
+		{{Form::label('username', 'Username: ')}}
 		{{Form::text('username', '', array('class'=>'flat-text', 'size'=>'50'))}}
 	</div>
 	<div class="form-line">
@@ -29,8 +29,12 @@
 	</div>
 
 	<div class="form-line">
-		{{Form::label('image', 'Logo: ')}}
-		{{Form::file('image', array('class'=>'flat-file-input'))}}
+		{{Form::label('image_url', 'Image URL: ')}}
+		{{Form::text('image_url', '', array('class'=>'flat-text', 'size'=>'50'))}}
+	</div>
+	<div class="form-line">
+		{{Form::label('website', "Website URL: ")}}
+		{{Form::text('website', '', array('class'=>'flat-text', 'size'=>'50'))}}
 	</div>
 	<div class="form-line">
 		{{Form::label('city', 'City: ')}}

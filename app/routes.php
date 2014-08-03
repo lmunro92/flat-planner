@@ -15,9 +15,20 @@ Route::get('/', function(){
 });
 
 ### Using Controllers for Routes
-Route::get('/create-organization', 'OrganizationController@getCreateOrganization');
-Route::post('/create-organization', 'OrganizationController@postCreateOrganization');
-Route::get('/{organization}', 'OrganizationController@getOrganization');
+Route::get('/create-organization', 'OrganizationController@getCreate');
+Route::post('/create-organization', 'OrganizationController@postCreate');
+Route::resource('user', 'UserController');
+
+Route::get('/{slug}', 'OrganizationController@getOrganization');
+Route::get('/{slug}/edit', 'OrganizationController@getEdit');
+Route::post('/{slug}/edit', 'OrganizationController@putEdit');
+Route::post('/{slug}/add-member', 'OrganizationController@postAddMember');
+Route::get('/{slug}/create-flatplan/', 'FlatplanController@getCreateFlatplan');
+Route::post('/{slug}/create-flatplan/', 'FlatplanController@postCreateFlatplan');
+Route::get('/{slug}/{plan}', 'FlatplanController@getViewFlatplan');
+Route::get('/{slug}/{plan}/edit', 'FlatplanController@getEditFlatplan');
+Route::post('/{slug}/{plan}/edit', 'FlatplanController@getEditFlatplan');
+
 ### End Controllers
 
 

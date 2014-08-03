@@ -2,23 +2,13 @@
 
 class OrganizationController extends \BaseController {
 
-	/**
-	 * Show a single Organization page
-	 *
-	 * @param string $organization
-	 * @return response
-	 */
-	public function getOrganization ($organization)
-	{
-		return View::make('viewOrganization');
-	}
 
 	/**
 	* Create a new Organization
 	*
 	*	@return Response
 	*/
-	public function getCreateOrganization ()
+	public function getCreate()
 	{
 			return View::make('createOrganization');
 	}
@@ -28,84 +18,133 @@ class OrganizationController extends \BaseController {
 	 *
 	 * @return Response
 	 */
-	public function postCreateOrganization()
+	public function postCreate()
 	{
 		
 		$org = new Organization();
 		$org->name = Input::get('organization-name');
-		$slug = $this->create_slug(Input::get('organization-name'));
+		$slug = parent::create_slug(Input::get('organization-name'));
 		$org->slug = $slug;
 		$org->image_url = Input::get('image_url');
+		$org->website_url= Input::get('website');
 		$org->description = Input::get('description');
 		$org->city = Input::get('city');
 		$org->state = Input::get('state');
 		$org->country = Input::get('country');
-		//$org->save();
+		$org->save();
 		return Redirect::to('/'.$slug);
 	}
 
-
-
 	/**
-	 * Display the specified resource.
+	 * Show a single Organization page
 	 *
-	 * @param  int  $id
-	 * @return Response
+	 * @param string $slug
+	 * @return response
 	 */
-	public function show($id)
+	public function getOrganization ($slug)
 	{
-		//
-	}
-
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
-
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		//
-	}
-
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		//
+		try {
+			$org = Organization::whereSlug($slug)->first();
+		}
+		catch(Exception $e) {
+			return View::make('fourOhFour');
+		}
+		if($org == null){
+			return View::make('fourOhFour');
+		}
+		else{
+			$roles = Role::where('organization_id', '=', $org->id)->get();
+			return View::make('viewOrganization')->with('organization', $org)->with('roles', $roles);
+		}
 	}
 
 	/**
-	 *	Helper function for creating slugs
+	 * Edit an organization's details
 	 *
-	 *	@param the name to be slugged
-	 *	@return string 
+	 *	@param string $slug
+	 *	@return response
 	 */
-	private static function create_slug($name)
+	public function getEdit ($slug)
 	{
-		$slug = strtolower($name);
-		$slug = preg_replace('#[^a-z0-9 ]#', '', $slug);
-		$slug = preg_replace('#\s+#', ' ', $slug);
-		$slug = preg_replace('#\s#', '-', $slug);
-		echo $slug;
-		return $slug;
+		try {
+			$org = Organization::whereSlug($slug)->first();
+		}
+		catch(Exception $e) {
+			return View::make('fourOhFour');
+		}
+		if($org == null){
+			return View::make('fourOhFour');
+		}
+		else{	
+			return View::make('editOrganization')->with('organization', $org);
+		}	
 	}
+	
+	/**
+	 * Edit an organization's details
+	 *
+	 *	@param string $slug
+	 *	@return response
+	 */
+	public function putEdit ($slug)
+	{
+		try {
+			$org = Organization::whereSlug($slug)->first();
+		}
+		catch(Exception $e) {
+			return View::make('fourOhFour');
+		}
+		if($org == null){
+			return View::make('fourOhFour');
+		}
+		else{	
+			$org->name = Input::get('organization-name');
+			$org->image_url = Input::get('image_url');
+			$org->website_url = Input::get('website');
+			$org->description = Input::get('description');
+			$org->city = Input::get('city');
+			$org->state = Input::get('state');
+			$org->country = Input::get('country');
+			$org->save();
+			return Redirect::to('/'.$slug)->with('flash_message', 'Update Successful');
+		}
+	}
+
+	/*
+	* Add a member to an organization.
+	*
+	* @return response
+	*/
+	public function postAddMember($slug) {
+		try{ 
+			$org = Organization::whereSlug($slug)->first();
+		}
+		catch(Exception $e){
+			return View::make('fourOhFour');
+		}
+		if ($org == null) {
+			Return View::make('fourOhFour');
+		}
+		else{
+			try{
+				$user = User::Where('username', '=', Input::get('username'))->orWhere('email', '=', Input::get('username'))->first();
+			}
+			catch (Exception $e) {
+				return Redirect::back()->with('flash_message', 'No such user');
+			}
+			if($user == null) {
+				return Redirect::back()->with('flash_message', 'No such user');
+			}
+			else{
+				$role = new Role();
+				$role->title = Input::get('title');
+				$role->permissions = Input::get('permissions');
+				$role->user_id = $user->id;
+				$role->organization_id = $org->id;
+				$role->save();
+				return Redirect::back()->with('flash_message', 'user added');
+			}
+		}
+		}
+
 }
