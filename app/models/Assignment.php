@@ -7,7 +7,7 @@ class Assignment extends Eloquent {
 	}
 
 	public function pages() {
-		return $this->belongsToMany('Page');
+		return $this->belongsTo('Page');
 	}
 
 }

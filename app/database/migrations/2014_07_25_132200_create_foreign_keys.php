@@ -24,6 +24,7 @@ class CreateForeignKeys extends Migration {
 
 		Schema::table('assignments', function($table){
 			$table->foreign('user_id')->references('id')->on('users');
+			$table->foreign('page_id')->references('id')->on('pages');
 		});
 		
 		Schema::table('roles', function($table){
@@ -31,10 +32,6 @@ class CreateForeignKeys extends Migration {
 			$table->foreign('organization_id')->references('id')->on('organizations');
 		});
 
-		Schema::table('assignment_page', function($table){
-			$table->foreign('assignment_id')->references('id')->on('assignments');
-			$table->foreign('page_id')->references('id')->on('pages');
-		});
 	}
 
 	/**
@@ -54,14 +51,11 @@ class CreateForeignKeys extends Migration {
 		});
 		Schema::table('assignments', function($table){
 			$table->dropForeign('assignments_user_id_foreign');
+			$table->dropForeign('assignments_page_id_foreign');
 		});
 		Schema::table('roles', function($table){
 			$table->dropForeign('roles_user_id_foreign');
 			$table->dropForeign('roles_organization_id_foreign');
-		});
-		Schema::table('assignment_page', function($table){
-			$table->dropForeign('assignment_page_assignment_id_foreign');
-			$table->dropForeign('assignment_page_assignment_id_foreign');
 		});
 	}
 

@@ -7,7 +7,7 @@ class Page extends Eloquent {
 	}
 
 	public function assignments() {
-		$this->belongsToMany('Assignment');
+		$this->hasMany('Assignment');
 	}
 
 }

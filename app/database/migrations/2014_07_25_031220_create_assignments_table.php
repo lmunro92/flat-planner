@@ -18,6 +18,7 @@ class CreateAssignmentsTable extends Migration {
 			$table->integer('deadline');
 			$table->boolean('completed');
 			$table->integer('user_id')->unsigned();
+			$table->integer('page_id')->unsigned();
 			$table->timestamps();
 		});
 	}
