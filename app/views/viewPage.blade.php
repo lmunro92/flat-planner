@@ -59,13 +59,14 @@
 
 <div class="assignment">
 	<h3>Assignments</h3>
-	<p>Here's a list of assignments</p>
-	<p>Here's another assignemnt</p>
+		@foreach ($assignments as $assignment)
+			<p>{{{$assignment->deadline}}}: {{{$assignment->user->username}}}<p>
+		@endforeach
 </div>
 
 <div class="assignment">
 	<h3>Create New Assignment</h3>
-	{{Form::open(array('url'=>'/'.$org->slug.'/'.$flatplan->slug.'/'.$page->number.'/create-assignment', 'method'=>'POST'))}}
+	{{Form::open(array('url'=>'/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number.'/create-assignment', 'method'=>'POST'))}}
 		<div class="assignment-line">
 			{{Form::label('user', 'Select User: ')}}
 			{{Form::select('user', $members, '', array('class'=>'flat-select'))}}

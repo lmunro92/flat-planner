@@ -15,7 +15,7 @@ class CreateAssignmentsTable extends Migration {
 		Schema::create('assignments', function($table){
 			$table->increments('id');
 			$table->text('description');
-			$table->integer('deadline');
+			$table->text('deadline');
 			$table->boolean('completed');
 			$table->integer('user_id')->unsigned();
 			$table->integer('page_id')->unsigned();

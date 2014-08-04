@@ -89,16 +89,17 @@ class PageController extends \BaseController {
 			if($page->spread_page_id){
 				$pageOpp = Page::where('flatplan_id', '=', $flatplan->id)->where('id', '=', $page->spread_page_id)->firstOrFail();
 			}
+			$assignments = Assignment::where('page_id', '=', $page->id)->orWhere('page_id', '=', $pageOpp->id)->get();
 		}
 		catch(Exception $e) {
 			return View::make('fourOhFour');
 		}
 		$members = parent::member_list($slug);
 		if($page->spread_page_id){
-			return View::make('viewPage')->with('org', $org)->with('flatplan', $flatplan)->with('page', $page)->with('pageOpp', $pageOpp)->with('members', $members);
+			return View::make('viewPage')->with('org', $org)->with('flatplan', $flatplan)->with('page', $page)->with('pageOpp', $pageOpp)->with('assignments', $assignments)->with('members', $members);
 		}
 		else {
-			return View::make('viewPage')->with('org', $org)->with('flatplan', $flatplan)->with('page', $page)->with('members', $members);
+			return View::make('viewPage')->with('org', $org)->with('flatplan', $flatplan)->with('page', $page)->with('assignments', $assignments)->with('members', $members);
 		}
 	}
 

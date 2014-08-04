@@ -47,9 +47,9 @@ Route::put('/{slug}/{plan}/{number}/edit', 'PageController@putEditPage');
 
 
 ### AssignmentController
-Route::post('/{slug}/{plan}/{number}/assign', 'AssignmentController@postCreateAssignment');
-Route::get('/{slug}/{plan}/{number}/assign/{id}', 'AssignemtnController@getEditAssignment');
-Route::put('/{slug}/{plan}/{number}/assign/{id}', 'AssignmentController@putEditAssignment');
+Route::post('/{slug}/{plan}/{number}/create-assignment', 'AssignmentController@postCreateAssignment');
+Route::get('/{slug}/{plan}/{number}/assignment/{id}', 'AssignemtnController@getEditAssignment');
+Route::put('/{slug}/{plan}/{number}/assignment/{id}', 'AssignmentController@putEditAssignment');
 
 ### End Controllers
 
