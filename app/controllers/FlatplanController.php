@@ -150,7 +150,7 @@ class FlatplanController extends \BaseController {
 				$page->save();
 			}
 			elseif($page->page_number == 'IFC'){
-				$page->spread_page_id = $pages->filter(function($item){return $item->page_number == 1;})->first()->id;
+				$page->spread_page_id = $pages->filter(function($item) use ($page) {return $item->page_number == 1;})->first()->id;
 				$page->save();
 			}
 			elseif($page->page_number == 'IBC'){
@@ -167,7 +167,7 @@ class FlatplanController extends \BaseController {
 			}
 			elseif(((int)($page->page_number)) % 2 == 0){
 				try{
-					$pageOpp = Page::where('flatplan_id', '=', $page->flatplan_id)->where('page_number', '=', ($page->page_number) + 1)->firstOrFail();
+					$pageOpp = $pages->filter(function($item) use ($page){return $item->page_number == ($page->page_number + 1);})->first();
 				}
 				catch(Exception $e){
 					break;
@@ -177,7 +177,7 @@ class FlatplanController extends \BaseController {
 			}
 			else{
 				try{
-					$pageOpp = Page::where('flatplan_id', '=', $page->flatplan_id)->where('page_number', '=', ($page->page_number) - 1)->firstOrFail();
+					$pageOpp = $pages->filter(function($item) use ($page){return $item->page_number == ($page->page_number - 1);})->first();
 				}
 				catch(Exception $e){
 					break;

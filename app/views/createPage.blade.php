@@ -3,17 +3,17 @@
 @extends('layouts._master')
 
 @section('banner')
-<h1>Create New page</h1>
+<h1>Create new page in {{{$flatplan->name}}} from {{{$org->name}}}</h1>
 @stop
 
 @section('content')
 <?php $colors = array('white'=>'White', 'whitesmoke'=>'Grey', 'blue'=>'Blue', 'red'=>'Red', 'blueviolet'=>'Violet'); ?>
-{{Form::open(array('url'=>'/create-flatplan/', 'method'=>'POST', 'class'=>'fp-form'));}}
+{{Form::open(array('url'=>'/'.$org->slug.'/'.$flatplan->slug.'/create-page', 'method'=>'POST', 'class'=>'fp-form'));}}
 	<div class="form-line">
 		{{Form::label('number', 'Page Number: ');}}
-		{{Form::text('number', '', array('class'=>'flat-text'));}}
-		{{Form::checkbox('spread', 0, array('class'=>'flat-check'));}}
-		{{Form::Label('spread', 'Create as spread?');}}
+		{{Form::text('number', (count($flatplan->pages)-3), array('class'=>'flat-text'));}}
+		{{Form::checkbox('spread', 'spread', false, array('class'=>'flat-check'));}}
+		{{Form::Label('spread', 'Create accompanying spread page?');}}
 	</div>
 	<div class="form-line">
 		{{Form::label('slug', 'Slug: ');}}
@@ -29,7 +29,7 @@
 	</div>
 	<div class="form-line">
 		{{Form::label('image', 'Image: ');}}
-		{{Form::file('image', array('class'=>'flat-file-input'));}}
+		{{Form::text('image', '', array('class'=>'flat-text', 'size'=>'50'));}}
 	</div>
 	<div class="form-line">
 		{{Form::submit('Create');}}

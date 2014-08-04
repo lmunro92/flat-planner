@@ -30,4 +30,27 @@ class BaseController extends Controller {
 		echo $slug;
 		return $slug;
 	}
+
+	/**
+	 * Helper function to generate an array of members in an organization, keyed by their id
+	 *
+	 * @param $slug slug of the organization
+	 * @return array of members
+	 */
+
+	function member_list($slug)
+	{
+		$members = array();
+		try{
+			$org = Organization::where('slug', '=', $slug)->firstOrFail();
+		}
+		catch (Exception $e){
+			return $members;
+		}
+		$roles = Role::where('organization_id', '=', $org->id)->with('user')->get();
+		foreach($roles as $role){
+			$members[$role->user->id] = $role->user->username;
+		}
+		return $members;
+	}
 }

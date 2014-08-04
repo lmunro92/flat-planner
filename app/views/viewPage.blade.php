@@ -1,44 +1,55 @@
 @extends('layouts._master')
 
 @section('banner')
-<h1>Viewing page __  of __</h1>
+@if($pageOpp)
+	<h1>Pages {{{$page->page_number}}}-{{{$pageOpp->page_number}}} of {{{count($flatplan->pages)}}} in {{{$flatplan->name}}} from {{{$org->name}}}</h1>
+@else
+	<h1>Page {{{$page->page_number}}} of {{{count($flatplan->pages)}}} in {{{$flatplan->name}}} from {{{$org->name}}}</h1>
+@endif
 @stop
 
 @section('content')
 	<div class="page-wrapper">
-	<div class="pageOutline" style="border: 2px solid black; width: 170px; padding: 90px 45px;">
-
-	</div>
-	<div class="pageNumber" style="text-align: center;">
-		<p>42</p>
-	</div>
-		<div class="slug" style="height: 20px;">
-			<p style="font-size: 20px;">Testing Slug</p>
+		<div class="pageOutline" style="background: {{$page->color}}; border: 2px solid black; width: 170px; padding: 90px 45px;">
 		</div>
-</div>
+	<div class="pageNumber" style="text-align: center;">
+		<p>{{{$page->number}}}</p>
+	</div>
+	@if($pageOpp)
+	<div class="page-wrapper">
+		<div class="pageOutline" style="border: 2px solid black; width: 170px; padding: 90px 45px;">
+		</div>
+	<div class="pageNumber" style="text-align: center;">
+		<p>{{{$pageOpp->number}}}</p>
+	</div>
+	@endif
+		<div class="slug" style="height: 20px;">
+			<p style="font-size: 20px;">{{{$page->slug}}}</p>
+		</div>
+	</div>
 
 <div class="status">
 	<h3>Status</h3>
-	{{Form::open(array('url'=>'/update-page/','method'=>'POST'))}}
+	{{Form::open(array('url'=>'/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number.'/edit', 'method'=>'PUT', 'class'=>'fp-form'))}}
 	<div class="status-line">
-		{{Form::checkbox('copy', 0, array('class'=>'flat-check'))}}
+		{{Form::checkbox('copy', 'copy', $page->copy, array('class'=>'flat-check'))}}
 		{{Form::label('copy', 'Copy')}}
-		{{Form::checkbox('art', 0, array('class'=>'flat-check'))}}
+		{{Form::checkbox('art', 'art', $page->art, array('class'=>'flat-check'))}}
 		{{Form::label('art', 'Art')}}
-		{{Form::checkbox('design', 0, array('class'=>'flat-check'))}}
-		{{Form::label('design', 0, 'Design')}}
+		{{Form::checkbox('design', 'design', $page->design, array('class'=>'flat-check'))}}
+		{{Form::label('design', 'Design')}}
 	</div>
 	<div class="status-line">
-		{{Form::checkbox('edit', 0, array('class'=>'flat-check'))}}
+		{{Form::checkbox('edit', 'edit', $page->edit, array('class'=>'flat-check'))}}
 		{{Form::Label('edit', 'Edit')}}
-		{{Form::checkbox('approve', 0, array('class'=>'flat-check'))}}
+		{{Form::checkbox('approve', 'approve', $page->approve, array('class'=>'flat-check'))}}
 		{{Form::label('approve', 'Approve')}}
-		{{Form::checkbox('proofread', 0, array('class'=>'flat-check'))}}
+		{{Form::checkbox('proofread', 'proofread', $page->proofread, array('class'=>'flat-check'))}}
 		{{Form::label('proofread', 'Proofread')}}
 	</div>
 	<div class="status-line">
-		{{Form::checkbox('closed', 0, array('class'=>'flat-check'))}}
-		{{Form::label('closed', 'Closed')}}
+		{{Form::checkbox('close', 'close', $page->close, array('class'=>'flat-check'))}}
+		{{Form::label('close', 'Close')}}
 	</div>
 	<div class="status-line">
 		{{Form::submit('Update')}}
@@ -54,10 +65,10 @@
 
 <div class="assignment">
 	<h3>Create New Assignment</h3>
-	{{Form::open(array('url'=>'update-page', 'method'=>'POST'))}}
+	{{Form::open(array('url'=>'/'.$org->slug.'/'.$flatplan->slug.'/'.$page->number.'/create-assignment', 'method'=>'POST'))}}
 		<div class="assignment-line">
 			{{Form::label('user', 'Select User: ')}}
-			{{Form::select('user', array('dummy'=>'dummy'), 'dummy', array('class'=>'flat-select'))}}
+			{{Form::select('user', $members, '', array('class'=>'flat-select'))}}
 			{{Form::label('deadline', 'Deadline: ')}}
 			{{Form::text('deadline', '', array('class'=>'flat-text'))}}
 		</div>
@@ -76,8 +87,7 @@
 
 <div class="notes">
 	<h3>Notes</h3>
-	<p>These are the notes about the page. These are the notes about the page. These are the notes about the page. These are the notes about the page. These are the notes about the page. These are the notes about the page. These are the notes about the page. These are the notes about the page. These are the notes about the page. These are the notes about the page. These are the notes about the page.</p>
+	<p>{{{$page->notes}}}</p>
 </div>
-
 
 @stop

@@ -2,84 +2,47 @@
 
 class AssignmentController extends \BaseController {
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
-	public function index()
-	{
-		//
+/**
+ * Creates an assignment from post data
+ *
+ *	@param $slug slug of the organization
+ * @param $plan slug of the flatplan
+ * @param $number page number to be assigned
+ * @return response
+ */
+	public function postCreateAssignment($slug, $plan, $number){
+
+
+	}
+
+/**
+ * view the edit page for an assignment
+ *
+ *	@param $slug slug of the organization
+ * @param $plan slug of the flatplan
+ * @param $number page number to be assigned
+ * @param $id the id of the assignment
+ * @return response
+ */
+
+	public function getEditAssignment($slug, $plan, $number, $id){
+
+
 	}
 
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-	}
+/**
+ * handle the edits to an assignment
+ *
+ *	@param $slug slug of the organization
+ * @param $plan slug of the flatplan
+ * @param $number page number to be assigned
+ * @param $id the id of the assignment
+ * @return response
+ */
+	public function putEditAssignment($slug, $plan, $number, $id){
 
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		//
-	}
-
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
-
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		//
-	}
-
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		//
 	}
 
 

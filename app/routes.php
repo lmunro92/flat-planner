@@ -15,19 +15,41 @@ Route::get('/', function(){
 });
 
 ### Using Controllers for Routes
-Route::get('/create-organization', 'OrganizationController@getCreate');
-Route::post('/create-organization', 'OrganizationController@postCreate');
+
+
+###UserController (RESTful)
 Route::resource('user', 'UserController');
 
+
+###OrganizationController
+Route::get('/create-organization', 'OrganizationController@getCreate');
+Route::post('/create-organization', 'OrganizationController@postCreate');
 Route::get('/{slug}', 'OrganizationController@getOrganization');
 Route::get('/{slug}/edit', 'OrganizationController@getEdit');
 Route::post('/{slug}/edit', 'OrganizationController@putEdit');
 Route::post('/{slug}/add-member', 'OrganizationController@postAddMember');
+
+
+###FlatplanController
 Route::get('/{slug}/create-flatplan/', 'FlatplanController@getCreateFlatplan');
 Route::post('/{slug}/create-flatplan/', 'FlatplanController@postCreateFlatplan');
 Route::get('/{slug}/{plan}', 'FlatplanController@getViewFlatplan');
 Route::get('/{slug}/{plan}/edit', 'FlatplanController@getEditFlatplan');
 Route::put('/{slug}/{plan}/edit', 'FlatplanController@putEditFlatplan');
+
+
+### PageController
+Route::get('/{slug}/{plan}/create-page', 'PageController@getCreatePage');
+Route::post('/{slug}/{plan}/create-page', 'PageController@postCreatePage');
+Route::get('/{slug}/{plan}/{number}', 'PageController@getViewPage');
+Route::get('/{slug}/{plan}/{number}/edit', 'PageController@getEditPage');
+Route::put('/{slug}/{plan}/{number}/edit', 'PageController@putEditPage');
+
+
+### AssignmentController
+Route::post('/{slug}/{plan}/{number}/assign', 'AssignmentController@postCreateAssignment');
+Route::get('/{slug}/{plan}/{number}/assign/{id}', 'AssignemtnController@getEditAssignment');
+Route::put('/{slug}/{plan}/{number}/assign/{id}', 'AssignmentController@putEditAssignment');
 
 ### End Controllers
 
