@@ -2,6 +2,23 @@
 
 class UserController extends \BaseController {
 
+	private $rules = array(
+		'username'=>'required|unique:users,username|unique:organizations,slug',
+		'email'=>'required|email|unique:users,email',
+		'password'=>'required|confirmed|min:8',
+		'image_url'=>'active_url',
+		'website_url'=>'active_url');
+	private $updateRules = array(
+		'image_url'=>'active_url',
+		'website_url'=>'active_url'
+		);
+
+	public function __contruct()
+	{
+		$this->beforeFilter('guest', array('only' => array('create', 'store', 'getLogin', 'postLogin')));
+		$this->beforeFilter('auth', array('only' => array('edit', 'update', 'getLogout')));
+	}
+
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -31,6 +48,10 @@ class UserController extends \BaseController {
 	 */
 	public function store()
 	{
+		$validator = Validator::make(Input::all(), $this->rules);
+		if($validator->fails()){
+			return Redirect::back()->with('flash_message', 'Sign up failed. Please try again.')->withInput()->withErrors($validator);
+		}
 		$user = new User();
 		$user->first_name = Input::get('first-name');
 		$user->last_name = Input::get('last-name');
@@ -43,27 +64,37 @@ class UserController extends \BaseController {
 		$user->state = Input::get('state');
 		$user->country = Input::get('country');
 		$user->bio = Input::get('profile');
-		$user->save();
+		try{
+			$user->save();
+		}
+		catch(Exception $e){
+			return Redirect::back()->with('flash_message', 'Sign up failed. Please try again.')->withInput();
+		}
 		//Create a personal organization for each user
 		$org = new Organization();
 		$org->name = Input::get('first-name').' '.Input::get('last-name');
 		$org->slug = Parent::create_slug(Input::get('username'));
 		$org->image_url = Input::get('image_url');
-		$org
-		->website_url = Input::get('website_url');
+		$org->website_url = Input::get('website_url');
 		$org->description = Input::get('profile');
 		$org->city = Input::get('city');
 		$org->state = Input::get('state');
 		$org->country = Input::get('country');
-		$org->save();
-
+		try{
+			$org->save();
+		}
+		catch(Exception $e){
+			return Redirect::back()->with('flash_message', 'Sign up failed. Please try again.')->withInput();
+			}
+		//make user the editor of that organization
 		$role = new Role();
 		$role->title = 'Personal Projects';
 		$role->permissions = 'edit';
 		$role->organization_id = $org->id;
 		$role->user_id = $user->id;
 		$role->save();
-		return Redirect::to('/user/'.$user->username);
+		Auth::login($user);
+		return Redirect::to('/user/'.$user->username)->with('flash_message', 'Update Successful');
 	}
 
 
@@ -76,18 +107,13 @@ class UserController extends \BaseController {
 	public function show($username)
 	{
 		try{
-			$user = User::whereUsername($username)->first();
+			$user = User::whereUsername($username)->firstOrFail();
 		}
 		catch (exception $e) {
 			return View::make('fourOhFour');
 		}
-		if($user == null){
-			return View::make('fourOhFour');
-		}
-		else{
-			$roles = Role::where('user_id', '=', $user->id)->get();
-			return View::make('viewUser')->with('user', $user)->with('roles', $roles);
-		}
+		$roles = Role::where('user_id', '=', $user->id)->get();
+		return View::make('viewUser')->with('user', $user)->with('roles', $roles);
 	}
 
 
@@ -100,16 +126,16 @@ class UserController extends \BaseController {
 	public function edit($username)
 	{
 		try{
-			$user = User::whereUsername($username)->first();
+			$user = User::whereUsername($username)->firstOrFail();
 		}
 		catch (exception $e) {
 			return View::make('fourOhFour');
 		}
-		if($user == null){
-			return View::make('fourOhFour');
-		}
-		else{
+		if($user->id == Auth::user()->id){
 			return View::make('editUser')->with('user', $user);
+		}
+		else {
+			return Redirect::to('/user/'.$username)->with('flash_message', 'You cannot edit that user');
 		}
 	}
 
@@ -123,27 +149,28 @@ class UserController extends \BaseController {
 	public function update($username)
 	{
 		try{
-			$user = User::whereUsername($username)->first();
+			$user = User::whereUsername($username)->firstorFail();
 		}
 		catch (exception $e) {
 			return View::make('fourOhFour');
 		}
-		if($user == null){
-			return View::make('fourOhFour');
+		if($user->id != Auth::user()->id){
+			return Redirect::to('/user/'/$username)->with('flash_message', 'You cannot edit that user');
 		}
-		else{
-			$user->first_name = Input::get('first-name');
-			$user->last_name = Input::get('last-name');
-			$user->email = Input::get('email');
-			$user->image_url = Input::get('image_url');
-			$user->website_url = Input::get('website_url');
-			$user->city = Input::get('city');
-			$user->state = Input::get('state');
-			$user->country = Input::get('country');
-			$user->bio = Input::get('profile');
-			$user->save();
-			return Redirect::to('/user/'.$username);
-		} 
+		$validator = Validator::make(Input::all(), $this->updateRules);
+		if($validator->fails()){
+			return Redirect::back()->with('flash_message', 'Edit failed. Please try again.')->withInput()->withErrors($validator);
+		}
+		$user->first_name = Input::get('first-name');
+		$user->last_name = Input::get('last-name');
+		$user->image_url = Input::get('image_url');
+		$user->website_url = Input::get('website_url');
+		$user->city = Input::get('city');
+		$user->state = Input::get('state');
+		$user->country = Input::get('country');
+		$user->bio = Input::get('profile');
+		$user->save();
+		return Redirect::to('/user/'.$username)->with('flash_message', 'Update successful');
 	}
 
 
@@ -158,5 +185,43 @@ class UserController extends \BaseController {
 		//
 	}
 
+	/**
+	 *	Displays the login form.
+	 *
+	 *	@return Response
+	 */
+	public function getLogin(){
+		return View::make('login');
+	}
 
+	/**
+	 * Handles the login form.
+	 *
+	 * @return Response
+	 */
+	public function postLogin(){
+		try{
+			$user = User::where('username', '=', Input::get('username'))->orWhere('email', '=', Input::get('username'))->firstOrFail();
+		}
+		catch (Exception $e) {
+			return Redirect::to('/login')->withInput()->with('flash_message', 'Invalid username or e-mail. Please try again.');
+		}
+		if(Hash::check(Input::get('password'), $user->password)){
+			Auth::login($user);
+			return Redirect::intended('/')->with('flash_message', 'Login successful. Welcome back, '.$user->username);
+		}
+		else{
+			return Redirect::to('/login')->withInput()->with('flash_message', 'Invalid password');
+		}
+	}
+
+	/**
+	 * Logs out the user
+	 *
+	 * @return response
+	 */
+	public function getLogout() {
+		Auth::logout();
+		return Redirect::to('/')->with('flash_message', 'Logout successful.');
+	}
 }

@@ -2,6 +2,11 @@
 
 class FlatplanController extends \BaseController {
 
+	public function __contruct()
+	{
+		//		
+	}
+
 /**
  * Create a new flatplan within a given organization
  *

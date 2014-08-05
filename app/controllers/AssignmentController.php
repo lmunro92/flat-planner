@@ -2,6 +2,12 @@
 
 class AssignmentController extends \BaseController {
 
+	public function __contruct()
+	{
+		//		
+	}
+
+
 /**
  * Creates an assignment from post data
  *

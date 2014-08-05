@@ -24,8 +24,8 @@
 	<div class="form-line">
 		{{Form::label('password', 'Password: ')}}
 		{{Form::password('password', '', array('class'=>'flat-text', 'size'=>'20'))}}
-		{{Form::label('confirm', 'Confirm Password: ')}}
-		{{Form::password('confirm', '', array('class'=>'flat-text', 'size'=>'20'))}}
+		{{Form::label('password_confirmation', 'Confirm Password: ')}}
+		{{Form::password('password_confirmation', '', array('class'=>'flat-text', 'size'=>'20'))}}
 	</div>
 
 	<div class="form-line">

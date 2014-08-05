@@ -3,6 +3,12 @@
 class PageController extends \BaseController {
 
 
+	public function __contruct()
+	{
+		//		
+	}
+
+
 /**
  * Creates a new page
  * 

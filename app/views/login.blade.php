@@ -16,6 +16,10 @@
 		{{Form::label('password', 'Password: ')}}
 		{{Form::password('password', array('class'=>'flat-text', 'size'=>'30'))}}
 	</div>
+	<div class="form-line">
+		{{Form::checkbox('remember', 'remember', true, array('class'=>'flat-check'))}}
+		{{Form::label('remember', 'Remember Me')}}
+	</div>
 	{{Form::submit('Login')}}
 {{Form::close()}}
 @stop

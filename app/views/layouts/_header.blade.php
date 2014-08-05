@@ -7,5 +7,9 @@
 </div>
 
 <div class="credentials">
+	@if(Session::get('flash_message'))
+		{{ Session::get('flash_message') }}
+	@else
 		<a href="/login">Log in/Sign up</a>
+	@endif
 </div>

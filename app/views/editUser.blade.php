@@ -14,10 +14,6 @@
 		{{Form::text('last-name', $user['last_name'], array('class'=>'flat-text', 'size'=>'20'))}}
 	</div>
 	<div class="form-line">
-		{{Form::label('email', 'E-mail Address: ')}}
-		{{Form::email('email', $user['email'], array('class'=>'flat-text', 'size'=>'50'))}}
-	</div>
-	<div class="form-line">
 		{{Form::label('image_url', 'Image URL: ')}}
 		{{Form::text('image_url', $user['image_url'], array('class'=>'flat-text', 'size'=>'50'))}}
 	</div>

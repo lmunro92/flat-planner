@@ -2,6 +2,10 @@
 
 class OrganizationController extends \BaseController {
 
+ 	public function __contruct()
+	{
+		//
+	}
 
 	/**
 	* Create a new Organization
