@@ -2,9 +2,19 @@
 
 class OrganizationController extends \BaseController {
 
+	private $rules = array(
+			'name'=>'required|unique:organizations,name';
+			'image_url' => 'active_url';
+			'website_url' => 'active_url';
+		);
+	private $updateRules = array(
+		'image_url' => 'active_url';
+		'website_url' => 'active_url';
+		);
+
  	public function __contruct()
 	{
-		//
+		$this->beforeFilter('auth', array('except' => array('getOrganization')));
 	}
 
 	/**
@@ -24,7 +34,10 @@ class OrganizationController extends \BaseController {
 	 */
 	public function postCreate()
 	{
-		
+		$validator = Validator::make(Input::all(), $rules);
+		if($validator->fails()){
+			return Redirect::back()->withInput()->withErrors->with('flash_message', 'Organization could not be created. Please try again.');
+		}
 		$org = new Organization();
 		$org->name = Input::get('organization-name');
 		$slug = parent::create_slug(Input::get('organization-name'));
@@ -36,7 +49,13 @@ class OrganizationController extends \BaseController {
 		$org->state = Input::get('state');
 		$org->country = Input::get('country');
 		$org->save();
-		return Redirect::to('/'.$slug);
+		$role = new Role();
+		$role->title = 'creator';
+		$role->permissions = 'edit';
+		$role->user_id = Auth::user()->id;
+		$role->organization_id = $org->id;
+		$role->save();
+		return Redirect::to('/'.$slug)->with('flash_message', 'Organization successfully create.';
 	}
 
 	/**
@@ -48,17 +67,12 @@ class OrganizationController extends \BaseController {
 	public function getOrganization ($slug)
 	{
 		try {
-			$org = Organization::whereSlug($slug)->first();
+			$org = Organization::whereSlug($slug)->('roles.user')->firstOrFail();
 		}
 		catch(Exception $e) {
 			return View::make('fourOhFour');
 		}
-		if($org == null){
-			return View::make('fourOhFour');
-		}
-		else{
-			$roles = Role::where('organization_id', '=', $org->id)->get();
-			return View::make('viewOrganization')->with('organization', $org)->with('roles', $roles);
+		return View::make('viewOrganization')->with('organization', $org);
 		}
 	}
 
@@ -71,17 +85,15 @@ class OrganizationController extends \BaseController {
 	public function getEdit ($slug)
 	{
 		try {
-			$org = Organization::whereSlug($slug)->first();
+			$org = Organization::whereSlug($slug)->with('roles.user')->firstOrFail();
 		}
 		catch(Exception $e) {
 			return View::make('fourOhFour');
 		}
-		if($org == null){
-			return View::make('fourOhFour');
+		if(Auth::check() && $org->roles()->contains(Auth::user()->id)){ 
+			//add constraint to check that user can edit
+			return View::make('editOrganization')->with('organization', $org);	
 		}
-		else{	
-			return View::make('editOrganization')->with('organization', $org);
-		}	
 	}
 	
 	/**

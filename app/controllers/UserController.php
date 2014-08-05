@@ -131,11 +131,11 @@ class UserController extends \BaseController {
 		catch (exception $e) {
 			return View::make('fourOhFour');
 		}
-		if($user->id == Auth::user()->id){
+		if(Auth::check() && Auth::user()->id == $user->id){
 			return View::make('editUser')->with('user', $user);
 		}
 		else {
-			return Redirect::to('/user/'.$username)->with('flash_message', 'You cannot edit that user');
+			return Redirect::to('/user/'.$username)->with('flash_message', 'You cannot edit this user');
 		}
 	}
 
@@ -154,8 +154,8 @@ class UserController extends \BaseController {
 		catch (exception $e) {
 			return View::make('fourOhFour');
 		}
-		if($user->id != Auth::user()->id){
-			return Redirect::to('/user/'/$username)->with('flash_message', 'You cannot edit that user');
+		if(Auth::check() && Auth::user()->id != $user->id){
+			return Redirect::to('/user/'/$username)->with('flash_message', 'You cannot edit this user');
 		}
 		$validator = Validator::make(Input::all(), $this->updateRules);
 		if($validator->fails()){
@@ -208,7 +208,7 @@ class UserController extends \BaseController {
 		}
 		if(Hash::check(Input::get('password'), $user->password)){
 			Auth::login($user);
-			return Redirect::intended('/')->with('flash_message', 'Login successful. Welcome back, '.$user->username);
+			return Redirect::intended('/')->with('flash_message', 'Login successful. Welcome back, '.$user->first_name);
 		}
 		else{
 			return Redirect::to('/login')->withInput()->with('flash_message', 'Invalid password');
