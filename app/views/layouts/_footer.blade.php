@@ -8,4 +8,8 @@
 <div class="bottom-center">
 	<p class="copyright">Flat-Planner is © Jonathan Seitz, 2014.</p>
 </div>
+@if(Auth::check())
+	<p>Logged in as {{Auth::user()->username}}</p>
+@endif
+
 

@@ -64,7 +64,7 @@
 		</div>
 		<div class="add-member-line">
 			{{Form::label('permissions', 'Permissions: ')}}
-			{{Form::radio('permissions', 'view', false, array('class'=>'flat-radio'))}}
+			{{Form::radio('permissions', 'view', true, array('class'=>'flat-radio'))}}
 			View
 			{{Form::radio('permissions', 'edit', false, array('class'=>'flat-radio'))}}
 			Edit
