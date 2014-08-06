@@ -2,9 +2,24 @@
 
 class FlatplanController extends \BaseController {
 
+
+
+	private $rules = array(
+		"publications_date"=>"format:m/d/Y",
+		"pages"=>"min:2|even",
+		);
+
+
 	public function __contruct()
 	{
-		//		
+		parent::__construct();
+		$this->beforeFilter('auth');	
+		Validator::extend('even', function($field, $value, $parameters){
+	 		return $value % 2 == 0;
+		});	
+		Validator::extend('odd', function($field,$value,$parameters){
+		 	return $value %2 != 0;
+		});
 	}
 
 /**
@@ -20,7 +35,15 @@ class FlatplanController extends \BaseController {
 		catch(Exception $e) {
 			return View::Make('fourOhFour');
 		}
-		return View::make('createFlatplan')->with('org', $org);
+		if(Auth::check()){
+			try{
+				$role = $org->roles->filter(function($item){return $item->user_id == Auth::user()->id;})->first();
+			}
+			catch (Exception $e) {
+				return Redirect::to('/'.$slug)->with('flash_message', 'You cannot view this organization.');
+			}
+			return View::make('createFlatplan')->with('org', $org);
+		}
 	}
 
 /**
@@ -73,11 +96,6 @@ class FlatplanController extends \BaseController {
 	public function getViewFlatplan($slug, $plan) {
 		try{
 			$org = Organization::where('slug', '=', $slug)->firstOrFail();
-		}
-		catch(Exception $e) {
-			return View::Make('fourOhFour');
-		}
-		try{
 			$flatplan = Flatplan::where('organization_id', '=', $org->id)->where('slug', '=', $plan)->firstOrFail();
 		}
 		catch(Exception $e) {

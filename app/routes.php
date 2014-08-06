@@ -21,14 +21,14 @@ Route::resource('user', 'UserController');
 Route::get('/signup', array('before'=>'guest', 'uses'=>'UserController@create'));
 Route::get('/login', array('before'=>'guest', 'uses'=>'UserController@getLogin'));
 Route::post('/login', array('before'=>'guest', 'uses'=>'UserController@postLogin'));
-Route::get('/logout', array('before'=>'auth', 'uses'=>'UserController@getLogout'));
+Route::get('/logout', array('uses'=>'UserController@getLogout'));
 
 ### OrganizationController
 Route::get('/create-organization', 'OrganizationController@getCreate');
 Route::post('/create-organization', 'OrganizationController@postCreate');
 Route::get('/{slug}', 'OrganizationController@getOrganization');
 Route::get('/{slug}/edit', 'OrganizationController@getEdit');
-Route::post('/{slug}/edit', 'OrganizationController@putEdit');
+Route::put('/{slug}/edit', 'OrganizationController@putEdit');
 Route::post('/{slug}/add-member', 'OrganizationController@postAddMember');
 
 

@@ -73,12 +73,28 @@ class OrganizationController extends \BaseController {
 	public function getOrganization ($slug)
 	{
 		try {
-			$org = Organization::whereSlug($slug)->with('roles.user')->firstOrFail();
+			$org = Organization::whereSlug($slug)->firstOrFail();
+			$roles = Role::where('organization_id', '=', $org->id)->get();
+			$flatplans = Flatplan::where('organization_id', '=', $org->id)->get();
 		}
 		catch(Exception $e) {
 			return View::make('fourOhFour');
 		}
-		return View::make('viewOrganization')->with('organization', $org)->with('roles', $org->roles);
+			if(Auth::check()){;
+				try{
+					$permission = $org->roles->filter(function($item){return $item->user_id == Auth::user()->id;})->first()->permissions;
+				}
+				catch(Exception $e){
+					$permission = 'guest';
+				}
+			}
+			else{
+				$permission = 'guest';
+			}
+		return View::make('viewOrganization')->with('org', $org)
+															->with('roles', $roles)
+															->with('flatplans', $flatplans)
+															->with('permission', $permission);
 	}
 
 	/**
@@ -97,13 +113,13 @@ class OrganizationController extends \BaseController {
 		}
 		if(Auth::check()){
 			try{
-				$role = $org->roles()->filter(function($item){return $item->user_id == Auth::user()->id;})->firstOrFail();
+				$role = $org->roles->filter(function($item){return $item->user_id == Auth::user()->id;})->first();
 			}
-			catch {
-				return Redirect::to('/'.$slug)->with('flash_message', 'You do not have permission to add members to this organization.');
+			catch (Exception $e) {
+				return Redirect::to('/'.$slug)->with('flash_message', 'You do not have permission to edit this organization.');
 			}
 			if ($role->permissions == 'edit'){ 
-				return View::make('editOrganization')->with('organization', $org);
+				return View::make('editOrganization')->with('org', $org);
 			}
 			else {
 				return Redirect::to('/'.$slug)->with('flash_message', 'You do not have permission to edit this organization.');
@@ -130,9 +146,9 @@ class OrganizationController extends \BaseController {
 		}
 		if(Auth::check()){
 			try{
-				$role = $org->roles()->filter(function($item){return $item->user_id == Auth::user()->id;})->firstOrFail();
+				$role = $org->roles->filter(function($item){return $item->user_id == Auth::user()->id;})->first();
 			}
-			catch{
+			catch (Exception $e){
 				return Redirect::to('/'.$slug)->with('flash_message', 'You do not have permission to add members to this organization.');
 			}
 			if ($role->permissions == 'edit'){
@@ -181,13 +197,13 @@ class OrganizationController extends \BaseController {
 		}
 		if(Auth::check()){
 			try{
-				$role = $org->roles()->filter(function($item){return $item->user_id == Auth::user()->id;})->firstOrFail();
+				$role = $org->roles->filter(function($item){return $item->user_id == Auth::user()->id;})->first();
 			}
-			catch{
+			catch (Exception $e){
 				return Redirect::to('/'.$slug)->with('flash_message', 'You do not have permission to add members to this organization.');
 			}
 			if ($role->permissions == 'edit'){
-				$validator = Validator::make(Input::all(), $roleRules);
+				$validator = Validator::make(Input::all(), $this->roleRules);
 				if($validator->fails()){
 					return Redirect::back()->withInput()->withErrors->with('flash_message', 'User could not be added. Please try again.');
 				}

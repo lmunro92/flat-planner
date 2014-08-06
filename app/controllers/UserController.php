@@ -15,6 +15,7 @@ class UserController extends \BaseController {
 
 	public function __contruct()
 	{
+		parent::__construct();
 		$this->beforeFilter('guest', array('only' => array('create', 'store', 'getLogin', 'postLogin')));
 		$this->beforeFilter('auth', array('only' => array('edit', 'update', 'getLogout')));
 	}
@@ -112,8 +113,18 @@ class UserController extends \BaseController {
 		catch (exception $e) {
 			return View::make('fourOhFour');
 		}
-		$roles = Role::where('user_id', '=', $user->id)->get();
-		return View::make('viewUser')->with('user', $user)->with('roles', $roles);
+		$roles = Role::with('organization')->where('user_id', '=', $user->id)->get();
+		if(Auth::check() && Auth::user()->id == $user->id){
+			$permission = "self";
+		}
+		else{
+			$permission = "other";
+		}
+
+		return View::make('viewUser')->with('user', $user)
+												->with('roles', $roles)
+												->with('permission', $permission);
+												#->with('organizations', $roles->organization);
 	}
 
 

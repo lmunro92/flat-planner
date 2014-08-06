@@ -3,11 +3,11 @@
 class Page extends Eloquent {
 
 	public function flatplan() {
-		$this->belongsTo('Flatplan');
+		return $this->belongsTo('Flatplan');
 	}
 
 	public function assignments() {
-		$this->hasMany('Assignment');
+		return $this->hasMany('Assignment');
 	}
 
 }

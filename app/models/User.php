@@ -31,6 +31,10 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	protected $guarded = array('id', 'created_at', 'updated_at');
 
 	public function assignments() {
-		$this->hasMany('Assignment');
+		return $this->hasMany('Assignment');
+	}
+
+	public function roles() {
+		return $this->hasMany('Role');
 	}
 }
