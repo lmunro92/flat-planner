@@ -6,11 +6,11 @@ class UserController extends \BaseController {
 		'username'=>'required|unique:users,username|unique:organizations,slug',
 		'email'=>'required|email|unique:users,email',
 		'password'=>'required|confirmed|min:8',
-		'image_url'=>'active_url',
-		'website_url'=>'active_url');
+		'image_url'=>'url',
+		'website_url'=>'url');
 	private $updateRules = array(
-		'image_url'=>'active_url',
-		'website_url'=>'active_url'
+		'image_url'=>'url',
+		'website_url'=>'url'
 		);
 
 	public function __contruct()
@@ -124,7 +124,6 @@ class UserController extends \BaseController {
 		return View::make('viewUser')->with('user', $user)
 												->with('roles', $roles)
 												->with('permission', $permission);
-												#->with('organizations', $roles->organization);
 	}
 
 
@@ -219,7 +218,7 @@ class UserController extends \BaseController {
 		}
 		if(Hash::check(Input::get('password'), $user->password)){
 			Auth::login($user);
-			return Redirect::intended('/')->with('flash_message', 'Login successful. Welcome back, '.$user->first_name);
+			return Redirect::intended('/{{{$user->username}}}')->with('flash_message', 'Login successful. Welcome back, '.$user->first_name);
 		}
 		else{
 			return Redirect::to('/login')->withInput()->with('flash_message', 'Invalid password');

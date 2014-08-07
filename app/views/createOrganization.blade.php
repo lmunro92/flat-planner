@@ -7,6 +7,11 @@
 @stop
 
 @section('content')
+<div class="form-errors">
+	@foreach($errors as $error)
+		<p class="error-message">{{$error->message}}</p>
+	@endforeach
+</div>
 {{Form::open(array('url'=>'/create-organization/', 'method'=>'POST', 'class'=>'fp-form'));}}
 
 	<div class="form-line">

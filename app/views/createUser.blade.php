@@ -6,6 +6,11 @@
 @stop
 
 @section('content')
+<div class="form-errors">
+	@foreach($errors as $error)
+		<p class="error-message">{{$error}}</p>
+	@endforeach
+</div>
 {{Form::open(array('url'=>'/user/', 'method'=>'POST', 'class'=>'fp-form'))}}
 	<div class="form-line">
 		{{Form::label('first-name', 'First Name: ')}}

@@ -5,6 +5,11 @@
 @stop
 
 @section('content')
+<div class="form-errors">
+	@foreach($errors as $error)
+		<p class="error-message">{{$error}}</p>
+	@endforeach
+</div>
 {{Form::open(array('url'=>'/'.$org['slug'].'/create-flatplan', 'method'=>'POST', 'class'=>'fp-form'));}}
 
 	<div class="form-line">
@@ -18,6 +23,7 @@
 	<div class="form-line">
 		{{Form::label('pages', 'Number of Pages: ');}}
 		{{Form::text('pages', '', array('class'=>'flat-number', 'size'=>'15'));}}
+		<p>Must be an even number, greater than 2</p>
 	</div>
 	<div class="form-line">
 		{{Form::submit('Create');}}

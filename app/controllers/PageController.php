@@ -2,10 +2,14 @@
 
 class PageController extends \BaseController {
 
+	private $rules = array(
+		'image'=>'url'
+		);
 
 	public function __contruct()
 	{
-		//		
+		parent::__construct();
+		$this->beforeFilter('auth');		
 	}
 
 
@@ -20,17 +24,27 @@ class PageController extends \BaseController {
 	public function getCreatePage($slug, $plan) {
 		try{
 			$org = Organization::where('slug', '=', $slug)->firstOrFail();
-		}
-		catch(Exception $e) {
-			return View::Make('fourOhFour');
-		}
-		try{
 			$flatplan = Flatplan::where('organization_id', '=', $org->id)->where('slug', '=', $plan)->with('pages')->firstOrFail();
 		}
 		catch(Exception $e) {
 			return View::Make('fourOhFour');
 		}
-		return View::make('createPage')->with('org', $org)->with('flatplan', $flatplan);
+		if(Auth::check()){
+			try{
+				$role = Role::where('organization_id', '=', $org->id)->where('user_id', '=', Auth::user()->id)->firstOrFail();
+			}
+			catch(Exception $e){
+				return Redirect::to('/'.$org->slug)->with('flash_message', 'you do not have permission to view this flatplan.'); 
+			}
+			if($role->permissions == 'edit')
+				return View::make('createPage')->with('org', $org)->with('flatplan', $flatplan);
+			else{
+				return Redirect::to('/'.$org->slug.'/'.$flatplan->slug)->with('flash_message', 'You do not have permission to add pages to this flatplan.');
+				}
+		}
+		else{
+			return Redirect::to('/login');
+		}
 	}
 
 /**
@@ -44,27 +58,26 @@ class PageController extends \BaseController {
 	public function postCreatePage($slug, $plan) {
 		try{
 			$org = Organization::where('slug', '=', $slug)->firstOrFail();
-		}
-		catch(Exception $e) {
-			return View::Make('fourOhFour');
-		}
-		try{
 			$flatplan = Flatplan::where('organization_id', '=', $org->id)->where('slug', '=', $plan)->with('pages')->firstOrFail();
 		}
 		catch(Exception $e) {
 			return View::Make('fourOhFour');
 		}
-		$page = new Page();
-		$page->page_number = Input::get('number');
-		$page->slug = Input::get('slug');
-		$page->notes = Input::get('notes');
-		$page->color = Input::get('color');
-		$page->image_url = Input::get('image');
-		$page->flatplan_id = $flatplan->id;
-		$page->save();
-		if(Input::get('spread')){
+		$validator = Validator::make(Input::all(), $this->rules);
+		if ($validator->fails()){
+			return Redirect::back()->withInput()->withErrors($validator)->with('flash_message', 'There were errors with your page. See below.');
+		}
+		else{
+			$page = new Page();
+			$page->page_number = count($flatplan->pages)-3;
+			$page->slug = Input::get('slug');
+			$page->notes = Input::get('notes');
+			$page->color = Input::get('color');
+			$page->image_url = Input::get('image');
+			$page->flatplan_id = $flatplan->id;
+			$page->save();
 			$pageOpp = new Page();
-			$pageOpp->page_number = (Input::get('number') + 1);
+			$pageOpp->page_number = count($flatplan->pages)-3;
 			$pageOpp->slug = Input::get('slug');
 			$pageOpp->notes = Input::get('notes');
 			$pageOpp->color = Input::get('color');
@@ -75,8 +88,8 @@ class PageController extends \BaseController {
 			$page->save();
 			$pageOpp->spread_page_id = $page->id;
 			$pageOpp->save();
+			return Redirect::to('/'.$org->slug.'/'.$flatplan->slug)->with('flash_message', 'Page added');
 		}
-		return Redirect::to('/'.$org->slug.'/'.$flatplan->slug)->with('flash_message', 'Page added');
 	}
 
 /**
@@ -101,11 +114,36 @@ class PageController extends \BaseController {
 			return View::make('fourOhFour');
 		}
 		$members = parent::member_list($slug);
+		try{
+			$role = Role::where('user_id', '=', Auth::user()->id)->where('organization_id', '=', $org->id)->firstOrFail();
+		}
+		catch (Exception $e) {
+			return Redirect::to('/'.$org->slug)->with('flash_message', 'You do not have permission to view this flatplan');
+		}
+		if($role->permissions == 'edit'){
+			$readonly = '';
+		}
+		else{
+			$readonly = 'disabled';
+		}
 		if($page->spread_page_id){
-			return View::make('viewPage')->with('org', $org)->with('flatplan', $flatplan)->with('page', $page)->with('pageOpp', $pageOpp)->with('assignments', $assignments)->with('members', $members);
+			return View::make('viewPage')->with('org', $org)
+													->with('flatplan', $flatplan)
+													->with('page', $page)
+													->with('pageOpp', $pageOpp)
+													->with('assignments', $assignments)
+													->with('members', $members)
+													->with('permission', $role->permissions)
+													->with('readonly', $readonly);
 		}
 		else {
-			return View::make('viewPage')->with('org', $org)->with('flatplan', $flatplan)->with('page', $page)->with('assignments', $assignments)->with('members', $members);
+			return View::make('viewPage')->with('org', $org)
+													->with('flatplan', $flatplan)
+													->with('page', $page)
+													->with('assignments', $assignments)
+													->with('members', $members)
+													->with('permission', $role->permissions)
+													->with('readonly', $readonly);
 		}
 	}
 
@@ -129,11 +167,22 @@ class PageController extends \BaseController {
 		catch(Exception $e) {
 			return View::make('fourOhFour');
 		}
-		if($page->spread_page_id){
-			return View::make('editPage')->with('org', $org)->with('flatplan', $flatplan)->with('page', $page)->with('pageOpp', $pageOpp);
+		try{
+			$role = Role::where('user_id', '=', Auth::user()->id)->where('organization_id', '=', $org->id)->firstOrFail();
+		}
+		catch (Exception $e) {
+			return Redirect::to('/'.$org->slug)->with('flash_message', 'You do not have permission to edit this flatplan');
+		}
+		if($role->permissions == 'edit'){
+			if($page->spread_page_id){
+				return View::make('editPage')->with('org', $org)->with('flatplan', $flatplan)->with('page', $page)->with('pageOpp', $pageOpp);
+			}
+			else{
+				return View::make('editPage')->with('org', $org)->with('flatplan', $flatplan)->with('page', $page);
+			}
 		}
 		else{
-			return View::make('editPage')->with('org', $org)->with('flatplan', $flatplan)->with('page', $page);
+			return Redirect::to('/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number)->with('flash_message', 'You do not have permission to edit this page');
 		}
 	}
 
@@ -150,19 +199,28 @@ class PageController extends \BaseController {
 			$org = Organization::where('slug', '=', $slug)->firstOrFail();
 			$flatplan = Flatplan::where('organization_id', '=', $org->id)->where('slug', '=', $plan)->with('pages')->firstOrFail();
 			$page = Page::where('flatplan_id', '=', $flatplan->id)->where('page_number', '=', $number)->firstOrFail();
-			if($page->spread_page_id){
-				$pageOpp = Page::where('flatplan_id', '=', $flatplan->id)->where('id', '=', $page->spread_page_id)->firstOrFail();
-			}
 		}
 		catch(Exception $e) {
 			return View::make('fourOhFour');
 		}
-		$page->page_number = Input::get('number');
-		$page->slug = Input::get('slug');
-		$page->notes = Input::get('notes');
-		$page->color = Input::get('color');
-		$page->image_url = Input::get('image');
-		$page->save();
-		return Redirect::to('/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number)->with('flash_message', 'Page updated successfully');
+		$validator = Validator::make(Input::all(), $this->rules);
+		if ($validator->fails()){
+			return Redirect::back()->withInput()->withErrors($validator)->with('flash_message', 'There were errors with your page. See below.');
+		}
+		else{	
+			$page->slug = Input::get('slug');
+			$page->notes = Input::get('notes');
+			$page->color = Input::get('color');
+			$page->copy = Input::get('copy');
+			$page->edit = Input::get('edit');
+			$page->art = Input::get('art');
+			$page->design = Input::get('design');
+			$page->approve = Input::get('approve');
+			$page->proofread = Input::get('proofread');
+			$page->close = Input::get('close');
+			$page->image_url = Input::get('image');
+			$page->save();
+			return Redirect::to('/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number)->with('flash_message', 'Page updated successfully');
+		}
 	}	
 }

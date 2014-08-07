@@ -7,13 +7,15 @@
 @stop
 
 @section('content')
+<div class="form-errors">
+	@foreach($errors as $error)
+		<p class="error-message">{{$error}}</p>
+	@endforeach
+</div>
 <?php $colors = array('white'=>'White', 'whitesmoke'=>'Grey', 'blue'=>'Blue', 'red'=>'Red', 'blueviolet'=>'Violet'); ?>
 {{Form::open(array('url'=>'/'.$org->slug.'/'.$flatplan->slug.'/create-page', 'method'=>'POST', 'class'=>'fp-form'));}}
 	<div class="form-line">
-		{{Form::label('number', 'Page Number: ');}}
-		{{Form::text('number', (count($flatplan->pages)-3), array('class'=>'flat-text'));}}
-		{{Form::checkbox('spread', 'spread', false, array('class'=>'flat-check'));}}
-		{{Form::Label('spread', 'Create accompanying spread page?');}}
+		<p>Creating pages {{count($flatplan->pages)-3}} and {{count($flatplan->pages)-2}} as a spread</p>
 	</div>
 	<div class="form-line">
 		{{Form::label('slug', 'Slug: ');}}
@@ -26,10 +28,6 @@
 	</div>
 	<div class-"form-line">
 		{{Form::textarea('notes', '', array('class'=>'flat-text-area'));}}
-	</div>
-	<div class="form-line">
-		{{Form::label('image', 'Image: ');}}
-		{{Form::text('image', '', array('class'=>'flat-text', 'size'=>'50'));}}
 	</div>
 	<div class="form-line">
 		{{Form::submit('Create');}}

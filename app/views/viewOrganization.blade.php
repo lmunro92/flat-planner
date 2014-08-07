@@ -8,6 +8,9 @@
 
 {{--show the logo and vital info of the org in the top-left corner --}}
 @section('content')
+<div class="nav-tree">
+	<span class="tree-text">/ {{{$org->name}}}</a> /</span>
+</div>
 <div class="nameplate">
 	<div class="nameplate-image">
 		<img src="{{{$org->image_url}}}" alt="{{{$org->name}}}" />
@@ -21,7 +24,7 @@
 	</div>
 	@if($permission == 'edit')
 	<div class="nameplate-edit">
-		<p><a href="/{{$org->slug}}/edit">Edit Organization</a></p>
+		<p><a href="/{{{$org->slug}}}/edit">Edit Organization</a></p>
 	</div>
 	@endif
 </div>
@@ -45,7 +48,7 @@
 	@foreach($roles as $role)
 	<div class="list-line">
 		<div class="list-col1">
-			<p><a href="/user/{{$role->user->username}}">{{$role->user->username}}</a></p> 
+			<p><a href="/user/{{{$role->user->username}}}">{{$role->user->username}}</a></p> 
 		</div>
 		<div class="list-col">
 			<p>{{$role->title}}</p>
@@ -98,7 +101,7 @@
 	@foreach($flatplans as $flatplan)
 		<div class="list-row">
 			<div class="list-col1">
-				<a href="/{{$org->slug}}/{{$flatplan->slug}}/">{{{$flatplan->name}}}</a>
+				<a href="/{{{$org->slug}}}/{{{$flatplan->slug}}}/">{{{$flatplan->name}}}</a>
 			</div>
 			<div class="list-col">
 				{{{$flatplan->deadline}}}
@@ -107,7 +110,7 @@
 	@endforeach
 	@if($permission == 'edit')
 	<div class="list-row">
-		<a href="/{{$org->slug}}/create-flatplan">Create New Flatplan</a>
+		<a href="/{{{$org->slug}}}/create-flatplan">Create New Flatplan</a>
 	</div>
 	@endif
 </div>
@@ -137,13 +140,13 @@
 			@foreach($page->assignments as $assignment)
 					<div class="list-row">
 						<div class="list-col1">
-							{{{$assignment->user->username}}}
+							<a href="/user/{{{$assignment->user->username}}}">{{{$assignment->user->username}}}</a>
 						</div>
 						<div class="list-col">
-							{{{$flatplan->name}}}
+							<a href="/{{{$org->slug}}}/{{{$flatplan->slug}}}">{{{$flatplan->name}}}</a>
 						</div>
 						<div class="list-col">
-							{{{$page->page_number}}}
+							<a href="/{{{$org->slug}}}/{{{$flatplan->slug}}}/{{{$page->page_number}}}">{{{$page->page_number}}}</a>
 						</div>
 						<div class="list-col">
 							{{{$assignment->deadline}}}

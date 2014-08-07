@@ -82,23 +82,23 @@
 			<h4>Notes</h4>
 		</div>
 	</div>
-	@if($role->organizations)
-	@foreach($roles->organizations as $organizations)
-		@if($organization->flatplans)
-		@foreach($organizations->flatplans as $flatplan)
+	@if($roles)
+	@foreach($roles as $role)
+		@if($role->organization->flatplans)
+		@foreach($role->organization->flatplans as $flatplan)
 			@if($flatplan->pages)
 			@foreach($flatplan->pages as $page)
 				@if($page->assignments)
 				@foreach($page->assignments as $assignment)
 					<div class="list-row">
 						<div class="list-line">
-							<a href="/{{$organization->slug}}">{{$organization->name}}</a>
+							<a href="/{{$role->organization->slug}}">{{$role->organization->name}}</a>
 						</div>
 						<div class="list-line">
-							<a href="/{{$organization->slug}}/{{$flatplan->slug}}">{{$flatplan->name}}</a>
+							<a href="/{{$role->organization->slug}}/{{$flatplan->slug}}">{{$flatplan->name}}</a>
 						</div>
 						<div class="list-line">
-							<a href="/{{$organization->slug}}/{{$flatplan->slug}}/{{$page->page_number}}">{{$page->page_number}}</a>
+							<a href="/{{$role->organization->slug}}/{{$flatplan->slug}}/{{$page->page_number}}">{{$page->page_number}}</a>
 						</div>
 						<div class="list-line">
 							{{$assignment->deadline}}

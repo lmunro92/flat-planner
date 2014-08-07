@@ -5,21 +5,19 @@ class FlatplanController extends \BaseController {
 
 
 	private $rules = array(
-		"publications_date"=>"format:m/d/Y",
-		"pages"=>"min:2|even",
+		'publication_date'=>'date_format:n/j/Y',
+		'pages'=>'required|numeric|min:2|even',
 		);
+	private $updateRules = array(
+		'publication_date'=>'date_format:n/j/Y'
+	);
 
 
 	public function __contruct()
 	{
 		parent::__construct();
 		$this->beforeFilter('auth');	
-		Validator::extend('even', function($field, $value, $parameters){
-	 		return $value % 2 == 0;
-		});	
-		Validator::extend('odd', function($field,$value,$parameters){
-		 	return $value %2 != 0;
-		});
+
 	}
 
 /**
@@ -37,12 +35,21 @@ class FlatplanController extends \BaseController {
 		}
 		if(Auth::check()){
 			try{
-				$role = $org->roles->filter(function($item){return $item->user_id == Auth::user()->id;})->first();
+				$role = Role::where('organization_id', '=', $org->id)->where('user_id', '=', Auth::user()->id)->firstOrFail();
+				#$org->roles->filter(function($item){return $item->user_id == Auth::user()->id;})->first();
 			}
 			catch (Exception $e) {
-				return Redirect::to('/'.$slug)->with('flash_message', 'You cannot view this organization.');
+				return Redirect::to('/'.$slug)->with('flash_message', 'You cannot edit this organization.');
 			}
-			return View::make('createFlatplan')->with('org', $org);
+			if($role->permissions == 'edit'){
+				return View::make('createFlatplan')->with('org', $org);
+			}
+			else {
+				return Redirect::to('/'.$slug)->with('flash_message', 'You do not have permission to add flatplans to this organization');
+			}
+		}
+		else{
+			return Redirect::to('/login');
 		}
 	}
 
@@ -59,31 +66,35 @@ class FlatplanController extends \BaseController {
 		catch(Exception $e) {
 			return View::Make('fourOhFour');
 		}
-		$flatplan = new Flatplan();
-		$flatplan->name = Input::get('name');
-		$flatplan->slug = Parent::create_slug(Input::get('name'));
-		$flatplan->pub_date = Input::get('publication_date');
-		$flatplan->organization_id = $org->id;
-		$flatplan->user_id = 1;
-		$flatplan->save();
-		$covers = array('COVER', 'IFC', 'IBC', 'BACK');
-		foreach($covers as $cover){
-			$page = new Page();
-			$page->page_number = $cover;
-			$page->flatplan_id = $flatplan->id;
-			$page->cover = true;
-			$page->save();
+		$validator = Validator::make(Input::all(), $this->rules);
+		if($validator->fails()){
+			return Redirect::back()->with('flash_message', 'There were errors with your flatplan. See below')->withInput()->withErrors($validator);
 		}
-		if(Input::get('pages')){
+		else{
+			$flatplan = new Flatplan();
+			$flatplan->name = Input::get('name');
+			$flatplan->slug = Parent::create_slug(Input::get('name'));
+			$flatplan->pub_date = Input::get('publication_date');
+			$flatplan->organization_id = $org->id;
+			$flatplan->user_id = 1;
+			$flatplan->save();
+			$covers = array('COVER', 'IFC', 'IBC', 'BACK');
+			foreach($covers as $cover){
+				$page = new Page();
+				$page->page_number = $cover;
+				$page->flatplan_id = $flatplan->id;
+				$page->cover = true;
+				$page->save();
+			}
 			for($i = 1; $i <= Input::get('pages'); $i++){
 				$page = new Page();
 				$page->page_number = $i;
 				$page->flatplan_id = $flatplan->id;
 				$page->save();
-			}
+				}
+			$this->match_pages($flatplan);
+			return Redirect::to('/'.$org->slug.'/'.$flatplan->slug)->with('flash_message', 'Flatplan created successfully');
 		}
-		$this->match_pages($flatplan);
-		return Redirect::to('/'.$org->slug.'/'.$flatplan->slug);
 	}
 
 	/**
@@ -101,9 +112,24 @@ class FlatplanController extends \BaseController {
 		catch(Exception $e) {
 			return View::Make('fourOhFour');
 		}
-		$pages = Page::where('flatplan_id', '=', $flatplan->id)->where('cover', '=', false)->get();
-		$covers = Page::where('flatplan_id', '=', $flatplan->id)->where('cover', '=', true)->get();
-		return View::make('viewFlatplan')->with('flatplan', $flatplan)->with('org', $org)->with('pages', $pages)->with('covers', $covers);
+		if(Auth::check()){
+			try{
+				$role = Role::where('organization_id', '=', $org->id)->where('user_id', '=', Auth::user()->id )->firstOrFail();
+			}
+			catch (Exception $e){
+				return redirect::to('/'.$org->slug)->with('flash_message', 'You do not have permission to view this flatplan.');
+			}
+			$pages = Page::where('flatplan_id', '=', $flatplan->id)->where('cover', '=', false)->get();
+			$covers = Page::where('flatplan_id', '=', $flatplan->id)->where('cover', '=', true)->get();
+			return View::make('viewFlatplan')->with('flatplan', $flatplan)
+														->with('org', $org)
+														->with('pages', $pages)
+														->with('covers', $covers)
+														->with('permission', $role->permissions);
+		}
+		else {
+			return Redirect::to('/login');
+		}
 	}
 
 	/**
@@ -116,17 +142,27 @@ class FlatplanController extends \BaseController {
 	public function getEditFlatplan($slug, $plan) {
 		try{
 			$org = Organization::where('slug', '=', $slug)->firstOrFail();
-		}
-		catch(Exception $e) {
-			return View::Make('fourOhFour');
-		}
-		try{
 			$flatplan = Flatplan::where('organization_id', '=', $org->id)->where('slug', '=', $plan)->firstOrFail();
 		}
 		catch(Exception $e) {
 			return View::Make('fourOhFour');
 		}
-		return View::make('editFlatplan')->with('org', $org)->with('flatplan', $flatplan);
+		if(Auth::check()){
+			try{
+				$role = Role::where('organization_id', '=', $org->id)
+									->where('user_id', '=', Auth::user()->id)
+									->where('permissions', '=', 'edit')
+									->firstOrFail();
+			}
+			catch(Exception $e) {
+				return Redirect::to('/'.$org->slug)->with('flash_message', 'You do not have permission to edit this flatplan.');
+			}
+			return View::make('editFlatplan')->with('org', $org)
+														->with('flatplan', $flatplan);
+		}
+		else{
+			return Redirect::to('/login');
+		}
 	}
 
 	/**
@@ -139,20 +175,21 @@ class FlatplanController extends \BaseController {
 	public function putEditFlatplan($slug, $plan){
 		try{
 			$org = Organization::where('slug', '=', $slug)->firstOrFail();
-		}
-		catch(Exception $e) {
-			return View::Make('fourOhFour');
-		}
-		try{
 			$flatplan = Flatplan::where('organization_id', '=', $org->id)->where('slug', '=', $plan)->firstOrFail();
 		}
 		catch(Exception $e) {
 			return View::Make('fourOhFour');
 		}
-		$flatplan->name = Input::get('name');
-		$flatplan->pub_date = Input::get('publication_date');
-		$flatplan->save();
-		return Redirect::to('/'.$org->slug.'/'.$flatplan->slug)->with('flash_message', 'Update Successful');
+		$validator = Validator::make(Input::all(), $this->updateRules);
+		if($validator->fails()){
+			return Redirect::back()->withInput()->withErrors($validator)->with('flash_message', 'There were errors with your update. See below.');
+		}
+		else{
+			$flatplan->name = Input::get('name');
+			$flatplan->pub_date = Input::get('publication_date');
+			$flatplan->save();
+			return Redirect::to('/'.$org->slug.'/'.$flatplan->slug)->with('flash_message', 'Update Successful');
+		}
 	}
 
 	/**

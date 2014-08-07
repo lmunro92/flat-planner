@@ -55,7 +55,21 @@ class AssignmentController extends \BaseController {
 		catch(Exception $e) {
 			return View::make('fourOhFour');
 		}
-		return View::make('editAssignment')->with('org', $org)->with('flatplan', $flatplan)->with('page', $page)->with('assignment', $assignment);
+		try{
+			$role = Role::where('organization_id', '=', $org->id)->where('user_id', '=' Auth::user()->id)->firstOrFail();
+		}
+		catch (Exception $e){
+			return Redirect::to('/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number)->with('flash_message', 'You do not have permission to edit this assignemnt');
+		}
+		if($role->permissions == 'edit'){
+			return View::make('editAssignment')->with('org', $org)
+															->with('flatplan', $flatplan)
+															->with('page', $page)
+															->with('assignment', $assignment);
+		}
+		else{
+			return Redirect::to('/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number)->with('flash_message', 'You do not have permission to edit this assignemnt');
+		}
 	}
 
 

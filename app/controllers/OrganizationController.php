@@ -3,14 +3,14 @@
 class OrganizationController extends \BaseController {
 
 	private $rules = array(
-			'name'=>'required|unique:organizations,name',
-			'image_url' => 'active_url',
-			'website_url' => 'active_url',
+			'organization-name'=>'required|unique:organizations,name',
+			'image_url' => 'url',
+			'website' => 'url',
 		);
 	
 	private $updateRules = array(
-			'image_url' => 'active_url',
-			'website_url' => 'active_url',
+			'image_url' => 'url',
+			'website' => 'url',
 		);
 	
 	private $roleRules = array(
@@ -40,28 +40,31 @@ class OrganizationController extends \BaseController {
 	 */
 	public function postCreate()
 	{
-		$validator = Validator::make(Input::all(), $rules);
-		if($validator->fails()){
-			return Redirect::back()->withInput()->withErrors->with('flash_message', 'Organization could not be created. Please try again.');
+		$validator = Validator::make(Input::all(), $this->rules);
+		if($validator->fails()) {
+			dd($validator->messages());
+			return Redirect::back()->withInput()->withErrors($validator)->with('flash_message', 'Organization could not be created. Please try again.');
 		}
-		$org = new Organization();
-		$org->name = Input::get('organization-name');
-		$slug = parent::create_slug(Input::get('organization-name'));
-		$org->slug = $slug;
-		$org->image_url = Input::get('image_url');
-		$org->website_url= Input::get('website');
-		$org->description = Input::get('description');
-		$org->city = Input::get('city');
-		$org->state = Input::get('state');
-		$org->country = Input::get('country');
-		$org->save();
-		$role = new Role();
-		$role->title = 'creator';
-		$role->permissions = 'edit';
-		$role->user_id = Auth::user()->id;
-		$role->organization_id = $org->id;
-		$role->save();
-		return Redirect::to('/'.$slug)->with('flash_message', 'Organization successfully created.');
+		else{
+			$org = new Organization();
+			$org->name = Input::get('organization-name');
+			$slug = parent::create_slug(Input::get('organization-name'));
+			$org->slug = $slug;
+			$org->image_url = Input::get('image_url');
+			$org->website_url= Input::get('website');
+			$org->description = Input::get('description');
+			$org->city = Input::get('city');
+			$org->state = Input::get('state');
+			$org->country = Input::get('country');
+			$org->save();
+			$role = new Role();
+			$role->title = 'creator';
+			$role->permissions = 'edit';
+			$role->user_id = Auth::user()->id;
+			$role->organization_id = $org->id;
+			$role->save();
+			return Redirect::to('/'.$slug)->with('flash_message', 'Organization successfully created.');
+		}
 	}
 
 	/**

@@ -10,14 +10,6 @@
 <?php $colors = array('white'=>'White', 'whitesmoke'=>'Grey', 'blue'=>'Blue', 'red'=>'Red', 'blueviolet'=>'Violet'); ?>
 {{Form::open(array('url'=>'/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number.'/edit', 'method'=>'PUT', 'class'=>'fp-form'));}}
 	<div class="form-line">
-		{{Form::label('number', 'Page Number: ');}}
-		{{Form::text('number', $page->page_number, array('class'=>'flat-text'));}}
-		@if($pageOpp)
-			{{Form::Label('spread', 'Shares a spread with:');}}
-			{{Form::text('spread', $pageOpp->page_number, array('class'=>'flat-check', 'readonly'=>''));}}
-		@endif
-	</div>
-	<div class="form-line">
 		{{Form::label('slug', 'Slug: ');}}
 		{{Form::text('slug', $page->slug, array('class'=>'flat-text', 'size'=>'50'));}}
 		{{Form::label('color', 'Color: ');}}
@@ -28,10 +20,6 @@
 	</div>
 	<div class-"form-line">
 		{{Form::textarea('notes', $page->notes, array('class'=>'flat-text-area'));}}
-	</div>
-	<div class="form-line">
-		{{Form::label('image', 'Image url: ');}}
-		{{Form::text('image', $page->image_url, array('class'=>'flat-text', 'size'=>'50'));}}
 	</div>
 	<div class="form-line">
 		{{Form::checkbox('copy', 'copy', $page->copy, array('class'=>'flat-check'))}}
