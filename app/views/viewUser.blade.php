@@ -14,7 +14,6 @@
 	</div>
 	<div class="nameplate-name">
 		<h2>{{{$user->first_name}}} {{{$user->last_name}}}</h2>
-		<p>{{{$user->username}}}</p>
 	</div>
 	<div class="nameplate-vitals">
 		<p>{{{$user->city}}}, {{{$user->state}}} {{{$user->country}}}</p>
@@ -22,7 +21,7 @@
 	</div>
 	@if($permission == 'self')
 	<div class="nameplate-edit">
-		<p><a href="/user/{{$user->username}}/edit">Edit User</a></p>
+		<p><a href="/user/{{$user->username}}/edit">Edit Profile</a></p>
 	</div>
 	@endif
 </div>
