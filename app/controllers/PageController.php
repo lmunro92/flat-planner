@@ -77,7 +77,7 @@ class PageController extends \BaseController {
 			$page->flatplan_id = $flatplan->id;
 			$page->save();
 			$pageOpp = new Page();
-			$pageOpp->page_number = count($flatplan->pages)-3;
+			$pageOpp->page_number = count($flatplan->pages)-2;
 			$pageOpp->slug = Input::get('slug');
 			$pageOpp->notes = Input::get('notes');
 			$pageOpp->color = Input::get('color');

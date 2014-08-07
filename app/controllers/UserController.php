@@ -217,8 +217,8 @@ class UserController extends \BaseController {
 			return Redirect::to('/login')->withInput()->with('flash_message', 'Invalid username or e-mail. Please try again.');
 		}
 		if(Hash::check(Input::get('password'), $user->password)){
-			Auth::login($user);
-			return Redirect::intended('/{{{$user->username}}}')->with('flash_message', 'Login successful. Welcome back, '.$user->first_name);
+			Auth::login($user, Input::get('remember'));
+			return Redirect::intended('/'.$user->username)->with('flash_message', 'Login successful. Welcome back, '.$user->first_name);
 		}
 		else{
 			return Redirect::to('/login')->withInput()->with('flash_message', 'Invalid password');

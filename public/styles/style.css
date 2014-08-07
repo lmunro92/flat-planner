@@ -1,5 +1,7 @@
+/*** BASIC ***/
 body{
 	margin: 0;
+	background: black;
 }
 
 header{
@@ -10,10 +12,79 @@ header{
 }
 
 article {
+	background: white;
 	padding-top: 120px;
-
+	padding-left: 40px;
+	padding-right: 40px;
+	padding-bottom: 80px;
 
 }
+
+footer {
+	background: black;
+	padding-left: 100px;
+	padding-right: 20px;
+	color: white;
+	text-align: right;
+}
+
+p{
+	font-family: 'adriene', 'georgia', serif;
+	font-size: 1em;
+}
+
+h1{
+	font-family: 'futura-pt', 'helvetica', 'arial', sans-serif;
+	font-weight: 500;
+	font-size: 3em;
+	margin: 15px 0 0 300px;
+}
+
+h2{
+	font-family: 'futura-pt', 'helvetica', 'arial', sans-serif;
+	font-weight: 300;	
+	font-size: 2em;
+}	
+
+h3{
+	font-family: 'futura-pt', 'helvetica', 'arial', sans-serif;
+	font-weight: 500;
+	font-size: 1.5em;
+	border-bottom: 2px solid black;
+	padding-bottom: 2px;
+	width: 100%;
+	text-align: right;
+	margin-bottom: 5px;
+}
+
+h4{
+	font-family: 'futura-pt', 'helvetica', 'arial', sans-serif;
+	text-transform: uppercase;
+	font-size: 1.1em;
+	font-weight: 500;
+	margin: 5px 0 5px 0;
+}
+
+a{
+	color: black;
+	text-decoration: none;
+}
+
+a:visited{
+	color: black;
+}
+
+a:hover{
+	color: #888;
+	text-decoration: underline;
+}
+
+label, input{
+	font-family: 'futura-pt', 'helvetica', 'arial', sans-serif;
+	font-size: 1em;
+}
+
+/*** HEADER ***/
 
 div.logo-box{
 	width: 100px;
@@ -26,22 +97,31 @@ img.fplogo{
 }
 
 div.credentials {
+	font-family: 'futura-pt', 'helvetica', 'arial', sans-serif;
+	font-size: 1em;
+	font-weight: 300;
+	text-transform: uppercase;
 	position: absolute;
 	right: 15px;
 	top: 65px;
+}
+
+/*** NAV TREE ***/
+
+
+/*** FOOTER ***/
+
+div.bottom-nav {
 
 }
 
-
-
-div.bottom-nav ul {
-
-
+.bottom-nav-item{
+	float:left;
+	margin-right: 50px;
 }
 
-div.bottom-nav ul li {
-
-
+div.bottom-nav ul li:before {
+	display: none;
 }
 
 div.bottom-center{
@@ -50,6 +130,170 @@ div.bottom-center{
 }
 
 p.copyright {
-
+	font-family: 'adriene', 'georgia', 'serif';
+	font-size: .8em;
 
 }
+
+
+/*** USER ***/
+.nameplate{
+	width: 400px;
+	padding: 15px;
+	border: 2px solid #DADADA;
+	float: left;
+	margin-top: 24px;
+}
+
+.user-organization{
+	width: 600px;
+	margin-left: 600px;
+	margin-top: 0;
+	}
+
+.list-col1{
+	display: inline-block;
+	width: 195px;
+}
+
+.list-col{
+	display: inline-block;
+	width: 195px;
+}
+
+.list-col-notes{
+	display: inline-block;
+	width: 395px;
+}
+
+.list-header{
+	clear: right;
+	border-bottom: 1px solid #DADADA;
+	text-align: center;
+}
+
+.list-line {
+	clear: right;
+	text-align: center;
+	border-bottom: 1px dashed #DADADA;
+}
+
+.user-assignments{
+	padding-top: 20px;
+	clear: both;
+	width: 1200px;
+}
+
+
+
+/*** ORGANIZATION ***/
+
+.organization-members{
+	width: 600px;
+	margin-left: 640px;
+	margin-top: 0;
+	margin-bottom: 50px;
+}
+
+.organization-flatplans{
+	display: inline-block;
+	float: left;
+	clear:both;
+	width: 400px;
+}
+
+
+.organization-assignments{
+	display: inline-block;
+	width: 700px;
+	margin-left: 140px;
+}
+
+.list-col-page{
+	display: inline-block;
+	width: 100px;
+	}
+
+.add-line {
+	text-align: center;
+	width: 100%;
+	padding-bottom: 50px;
+}
+
+div.add-line p{
+	font-family: 'futura-pt', 'helvetica', 'arial', sans-serif;
+	font-weight: 300;
+	text-transform: uppercase;
+}
+
+.add-member-line{
+	width: 100%;
+	text-align: right;
+	font-family: 'futura-pt', 'helvetica', 'arial', sans-serif;
+	font-size: 1em;
+	margin-top: 10px;
+}
+
+
+/*** FLATPLAN ***/
+.flatplan-info{
+ 	border: 2px solid #DADADA;
+ 	margin-top: 20px;
+ 	margin-bottom: 40px;
+ 	text-align: center;
+ 	 }
+
+.flatplan-info-block{
+	display: inline-block;
+	width: 250px;
+	text-align: center;
+}
+
+.flatplan-graphics{
+	width: 100%;
+}
+
+.flatplan-page-wrap{
+	width: 120px;
+	display: inline-block;
+	margin-right: -2px;
+	margin-bottom: 40px;
+}
+
+.flatplan-page{
+	border: 2px solid black;
+	width: 100%;
+	padding-top: 80px;
+	padding-bottom: 80px;
+}
+
+.flatplan-cover{
+	border: 2px solid black;
+	width: 100%;
+	padding-top: 80px;
+	padding-bottom: 80px;
+}
+
+.flatplan-back{
+	border: 2px solid black;
+	width: 100%;
+	padding-top: 80px;
+	padding-bottom: 80px;
+}
+
+.flatplan-page-number{
+	text-align: center;
+}
+
+div.flatplan-page-number p{
+	font-family: 'futura-pt', 'helvetica', 'arial', sans-serif;
+	margin: 5px;
+	}
+
+
+.flatplan-page-spacer{
+	display: inline-block;
+	width: 20px;
+}
+
+/*** PAGE ***/

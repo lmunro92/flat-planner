@@ -13,7 +13,7 @@
 		<img src="{{{$user->image_url}}}" alt="{{{$user->first_name}}} {{{$user->last_name}}}" />
 	</div>
 	<div class="nameplate-name">
-		<p>{{{$user->first_name}}} {{{$user->last_name}}}<p>
+		<h2>{{{$user->first_name}}} {{{$user->last_name}}}</h2>
 		<p>{{{$user->username}}}</p>
 	</div>
 	<div class="nameplate-vitals">
@@ -45,7 +45,7 @@
 	</div>
 	@foreach($roles as $role)
 	<div class="list-line">
-		<div class="list-col">
+		<div class="list-col1">
 			<p><a href="/{{$role->organization->slug}}">{{$role->organization->name}}</a></p>
 		</div>
 		<div class="list-col">
@@ -65,20 +65,20 @@
 
 <div class="user-assignments"</div>
 	<h3>Outstanding Assignment</h3>
-	<div class="list-headers">
+	<div class="list-header">
 		<div class="list-col1">
 			<h4>Organization</h4>
 		</div>
-		<div class="list-col1">
+		<div class="list-col">
 			<h4>Flatplan</h4>
 		</div>
-		<div class="list-col1">
+		<div class="list-col">
 			<h4>Page</h4>
 		</div>
 		<div class="list-col">
 			<h4>Deadline</h4>
 		</div>
-		<div class="list-col">
+		<div class="list-col-notes">
 			<h4>Notes</h4>
 		</div>
 	</div>
@@ -90,21 +90,21 @@
 			@foreach($flatplan->pages as $page)
 				@if($page->assignments)
 				@foreach($page->assignments as $assignment)
-					<div class="list-row">
-						<div class="list-line">
+					<div class="list-line">
+						<div class="list-col1">
 							<a href="/{{$role->organization->slug}}">{{$role->organization->name}}</a>
 						</div>
-						<div class="list-line">
+						<div class="list-col">
 							<a href="/{{$role->organization->slug}}/{{$flatplan->slug}}">{{$flatplan->name}}</a>
 						</div>
-						<div class="list-line">
+						<div class="list-col">
 							<a href="/{{$role->organization->slug}}/{{$flatplan->slug}}/{{$page->page_number}}">{{$page->page_number}}</a>
 						</div>
-						<div class="list-line">
-							{{$assignment->deadline}}
+						<div class="list-col">
+							<p>{{$assignment->deadline}}</p>
 						</div>
-						<div class="list-line">
-							{{$assignment->notes}}
+						<div class="list-col-notes">
+							<p>{{$assignment->notes}}</p>
 						</div>
 					</div>
 				@endforeach

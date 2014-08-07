@@ -2,7 +2,6 @@
 <html>
 <head>
 	<meta charset="UTF-8"></meta>
-	<meta name="viewport" content="width:device-width, user-scalable=no" />
 	<link rel="stylesheet" type="text/css" href="/styles/style.css" /> 
 	<script type="text/javascript" src="//use.typekit.net/dnc5tpl.js"></script>
 	<script type="text/javascript">try{Typekit.load();}catch(e){}</script>

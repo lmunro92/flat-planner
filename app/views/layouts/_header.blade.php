@@ -6,10 +6,16 @@
 @yield('banner')
 </div>
 
-<div class="credentials">
+<div class="flash">
 	@if(Session::get('flash_message'))
-		{{ Session::get('flash_message') }}
+		{{Session::get('flash_message')}}
+	@endif
+<div class="flash">
+
+<div class="credentials">
+	@if(Auth::check())
+		<a href="/user/{{Auth::user()->username}}">{{{Auth::user()->username}}}</a> | </a><a href="/logout">log out</a>
 	@else
-		<a href="/login">Log in/Sign up</a>
+		<a href="/login">Log in</a> | <a href="/signup">sign up</a>
 	@endif
 </div>

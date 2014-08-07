@@ -16,7 +16,7 @@
 		<img src="{{{$org->image_url}}}" alt="{{{$org->name}}}" />
 	</div>
 	<div class="nameplate-name">
-		<p>{{{$org->name}}}<p>
+		<h2>{{{$org->name}}}</h2>
 	</div> 
 	<div class="nameplate-vitals">
 		<p>{{{$org->city}}}, {{{$org->state}}}, {{{$org->country}}}</p>
@@ -61,8 +61,7 @@
 	</div>
 	@endforeach
 	@if($permission == 'edit')
-	<h3>Add New</h3>
-	<p>Add existing users to your organization</p>
+	<h3>Add Existing Users</h3>
 	{{Form::open(array('url'=>'/'.$org->slug.'/add-member/', 'method'=>'POST', 'class'=>'fp-form'))}}
 		<div class="add-member-line">
 			{{Form::label('username', 'Username or e-mail Address: ')}}
@@ -87,45 +86,46 @@
 </div>
 
 @if($permission == 'edit' || $permission == 'view')
+
 {{-- Listing of all Flatplans in bottom left --}}
 <div class="organization-flatplans">
 	<h3>All Flatplans</h3>
-	<div class="list-headers">
+	<div class="list-header">
 		<div class="list-col1">
 			<h4>flatplan</h4>
 		</div>
 		<div class="list-col">
-			<h4>Deadline</h4>
+			<h4>Publication Date</h4>
 		</div>
 	</div>
 	@foreach($flatplans as $flatplan)
-		<div class="list-row">
+		<div class="list-line">
 			<div class="list-col1">
-				<a href="/{{{$org->slug}}}/{{{$flatplan->slug}}}/">{{{$flatplan->name}}}</a>
+				<p><a href="/{{{$org->slug}}}/{{{$flatplan->slug}}}/">{{{$flatplan->name}}}</a>
 			</div>
 			<div class="list-col">
-				{{{$flatplan->deadline}}}
+				<p>{{{$flatplan->pub_date}}}</p>
 			</div>
 		</div>
 	@endforeach
 	@if($permission == 'edit')
-	<div class="list-row">
-		<a href="/{{{$org->slug}}}/create-flatplan">Create New Flatplan</a>
+	<div class="add-line">
+		<p><a href="/{{{$org->slug}}}/create-flatplan">Create New Flatplan</a></p>
 	</div>
 	@endif
 </div>
 
 {{-- Listing of all outstanding assignment in bottom right --}}
 <div class="organization-assignments">
-	<h3>Outstanding Assignment</h3>
-	<div class="list-headers">
+	<h3>Outstanding Assignments</h3>
+	<div class="list-header">
 		<div class="list-col1">
 			<h4>User</h4>
 		</div>
-		<div class="list-col1">
+		<div class="list-col">
 			<h4>Flatplan</h4>
 		</div>
-		<div class="list-col1">
+		<div class="list-col-page">
 			<h4>Page</h4>
 		</div>
 		<div class="list-col">
@@ -138,18 +138,18 @@
 		@foreach($flatplan->pages as $page)
 			@if($page->assignments)
 			@foreach($page->assignments as $assignment)
-					<div class="list-row">
+					<div class="list-line">
 						<div class="list-col1">
-							<a href="/user/{{{$assignment->user->username}}}">{{{$assignment->user->username}}}</a>
+							<p><a href="/user/{{{$assignment->user->username}}}">{{{$assignment->user->username}}}</a></p>
 						</div>
 						<div class="list-col">
-							<a href="/{{{$org->slug}}}/{{{$flatplan->slug}}}">{{{$flatplan->name}}}</a>
+							<p><a href="/{{{$org->slug}}}/{{{$flatplan->slug}}}">{{{$flatplan->name}}}</a></p>
+						</div>
+						<div class="list-col-page">
+							<p><a href="/{{{$org->slug}}}/{{{$flatplan->slug}}}/{{{$page->page_number}}}">{{{$page->page_number}}}</a></p>
 						</div>
 						<div class="list-col">
-							<a href="/{{{$org->slug}}}/{{{$flatplan->slug}}}/{{{$page->page_number}}}">{{{$page->page_number}}}</a>
-						</div>
-						<div class="list-col">
-							{{{$assignment->deadline}}}
+							<p>{{{$assignment->deadline}}}</p>
 						</div>
 					</div>
 			@endforeach
