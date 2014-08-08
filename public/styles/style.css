@@ -86,6 +86,17 @@ label, input{
 	font-size: 1em;
 }
 
+input.flat-button {
+	background: white;
+	border: 2px solid black;
+	padding: 5px 20px;
+	text-transform: uppercase;
+}
+
+input.flat-button:hover {
+	background: #DADADA;
+}
+
 /*** PAGE WRAPPER ***/
 .wrapper{
 	width: 1250px;
@@ -183,8 +194,6 @@ p.copyright {
 	text-transform: uppercase;
 }
 
-
-
 .user-organization{
 	width: 600px;
 	margin-left: 600px;
@@ -216,6 +225,11 @@ p.copyright {
 	clear: right;
 	text-align: center;
 	border-bottom: 1px dashed #DADADA;
+}
+
+.list-line-last {
+	clear: right;
+	text-align: center;
 }
 
 .user-assignments{
@@ -338,24 +352,86 @@ div.flatplan-page-number p{
 
 /*** PAGE ***/
 .page-wrapper{
-
+	width: 350px;
+	text-align: center;
+	display: inline-block;
 }
 
 .page-outline{
+	border: 2px solid black;
+	width: 200px;
+	margin: 0 auto;
+	padding: 130px 0;
 }
 
 .page-info{
 }
 
+.page-block{
+	margin: 50px 0px;
+	display: block;
+	}
+
 .page-notes{
+	display: inline-block;
+	width: 800px;
+	margin-left: 80px;
+	vertical-align: top;
 }
 
 .page-status{
+	clear: both;
+	display: inline-block;
+	width: 350px;
+	vertical-align: top;
 }
 
 .page-status-line{	
+	margin: 15px 0;
+	text-align: center;
 }
 
+.page-status-line-item{
+	width: 114px;
+	//margin: 0 15px;
+	text-align: left;
+	display: inline-block;
+}
+
+.page-status-line-close{
+	text-align: left;
+	width: 114px;
+	margin: 0 auto;
+}
+
+.page-assignments{
+	width: 800px;
+	margin-left: 80px;
+	display: inline-block;
+	vertical-align: top;
+	}
+
+.page-create-assignments {
+	width: 350px;
+	display: inline-block;
+	text-align: right;
+	vertical-align: top;
+}
+
+.assignment-line{
+	margin-top: 15px;
+	}
+
+.assignment-line-description{
+	margin-top: 15px;
+	text-align: left;
+}
+
+
+.assignment-line-button{
+	text-align: center;
+	margin-top: 15px;
+	}
 
 /*** HOMEPAGE ***/
 .welcome-wrap{
