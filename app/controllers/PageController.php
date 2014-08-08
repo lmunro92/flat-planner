@@ -222,5 +222,99 @@ class PageController extends \BaseController {
 			$page->save();
 			return Redirect::to('/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number)->with('flash_message', 'Page updated successfully');
 		}
-	}	
+	}
+
+/**
+ * Displays the page to confirm deleting an assignment
+ *
+ *	@param $slug slug of the organization
+ * @param $plan slug of the flatplan
+ * @param $number page number to be assigned
+ * @param $id the id of the assignment
+ * @return response
+ */
+	public function getConfirmDelete ($slug, $plan, $number){
+		try{
+			$org = Organization::where('slug', '=', $slug)->firstOrFail();
+			$flatplan = Flatplan::where('organization_id', '=', $org->id)->where('slug', '=', $plan)->firstOrFail();
+			$page = Page::where('flatplan_id', '=', $flatplan->id)->where('page_number', '=', $number)->firstOrFail();
+			$pageOpp = Page::where('spread_page_id', '=', $page->id)->firstOrFail();
+		}
+		catch(Exception $e) {
+			return View::make('fourOhFour');
+		}
+		if ($page->page_number == 'COVER' || $page->page_number == 'IFC' 
+				|| $page->page_number == 'IBC' || $page->page_numnber == 'BACK'
+				|| $pageOpp->page_number == 'COVER' || $pageOpp->page_number == 'IFC' 
+				|| $pageOpp->page_number == 'IBC' || $pageOpp->page_numnber == 'BACK'){
+			return Redirect::to('/'.$org->slug.'/'.$flatplan->slug)->with('flash_message', 'You cannot delete cover pages');
+		}
+		try{
+			$role = Role::where('organization_id', '=', $org->id)->where('user_id', '=', Auth::user()->id)->firstOrFail();
+		}
+		catch (Exception $e){
+			return Redirect::to('/'.$org->slug)->with('flash_message', 'You do not have permission to edit this organization');
+		}
+		if($role->permissions == 'edit'){
+			$action = 'delete pages '.$page->page_number.' and '.$pageOpp->page_number;
+			$additional = 'This will also delete all associated assignments';
+			$back = '/'.$org->slug.'/'.$flatplan->slug;
+			$url = '/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number.'/delete';
+			return View::make('confirmDelete')->with('action', $action)
+															->with('additional', $additional)
+															->with('back', $back)
+															->with('url', $url);
+		}
+		else{
+			return Redirect::to('/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number)->with('flash_message', 'You do not have permission to delete this page');
+		}
+	}
+
+/**
+ * handle deleting an assignment
+ *
+ *	@param $slug slug of the organization
+ * @param $plan slug of the flatplan
+ * @param $number page number to be assigned
+ * @param $id the id of the assignment
+ * @return response
+ */
+
+	public function deletePage ($slug, $plan, $number){
+		try{
+			$org = Organization::where('slug', '=', $slug)->firstOrFail();
+			$flatplan = Flatplan::where('organization_id', '=', $org->id)->where('slug', '=', $plan)->firstOrFail();
+			$page = Page::where('flatplan_id', '=', $flatplan->id)->where('page_number', '=', $number)->firstOrFail();
+			$pageOpp = Page::where('spread_page_id', '=', $page->id)->firstOrFail();
+		}
+		catch(Exception $e) {
+			return View::make('fourOhFour');
+		}
+		if ($page->cover == true || $pageOpp->cover == true){
+			return Redirect::to('/'.$org->slug.'/'.$flatplan->slug)->with('flash_message', 'You cannot delete cover pages');
+		}
+		try{
+			$role = Role::where('organization_id', '=', $org->id)->where('user_id', '=', Auth::user()->id)->firstOrFail();
+		}
+		catch (Exception $e){
+			return Redirect::to('/'.$org->slug)->with('flash_message', 'You do not have permission to edit this organization');
+		}
+		if($role->permissions == 'edit'){
+			$assignments = Assignment::where('page_id', '=', $page->id)->orWhere('page_id', '=', $pageOpp->id)->get();
+			if($assignments){
+				foreach($assignments as $assignment){
+					$assignment->delete();
+				}
+			}
+			DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+			$page->delete();
+			$pageOpp->delete();
+			DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+			parent::renumber_pages($flatplan);
+			return Redirect::to('/'.$org->slug.'/'.$flatplan->slug)->with('flash_message', 'Page deleted successfully');
+		}
+		else{
+			return Redirect::to('/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number)->with('flash_message', 'You do not have permission to delete this page');
+		}	
+	}
 }

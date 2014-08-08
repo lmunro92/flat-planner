@@ -3,8 +3,8 @@
 class AssignmentController extends \BaseController {
 
 	public function __contruct()
-	{
-		//		
+	{	
+		$this->beforeFilter('auth');	
 	}
 
 
@@ -26,13 +26,24 @@ class AssignmentController extends \BaseController {
 		catch(Exception $e) {
 			return View::make('fourOhFour');
 		}
-		$assignment = new Assignment();
-		$assignment->description = Input::get('description');
-		$assignment->deadline = Input::get('deadline');
-		$assignment->user_id = $user->id;
-		$assignment->page_id = $page->id;
-		$assignment->save();
-		return Redirect::back()->with('flash_message', 'Assignment created successfully');
+		try {
+			$role = Role::where('user_id', '=', Auth::user()->id)->where('page_id', '=', $page->id)->firstOrFail;
+		}
+		catch(Exception $e) {
+			return Redirect::to('/'.$org->slug)->with('flash_message', 'You do not have permission to edit this Organization.');
+		}
+		if ($role->permissions == 'edit'){
+			$assignment = new Assignment();
+			$assignment->description = Input::get('description');
+			$assignment->deadline = Input::get('deadline');
+			$assignment->user_id = $user->id;
+			$assignment->page_id = $page->id;
+			$assignment->save();
+			return Redirect::back()->with('flash_message', 'Assignment created successfully');
+		}
+		else{
+			return Redirect::to('/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number)->with('flash_message', 'You do not have permission to create pages in this Flatplan.');
+		}
 	}
 
 /**
@@ -48,18 +59,18 @@ class AssignmentController extends \BaseController {
 	public function getEditAssignment($slug, $plan, $number, $id){
 		try{
 			$org = Organization::where('slug', '=', $slug)->firstOrFail();
-			$flatplan = Flatplan::where('organization_id', '=', $org->id)->where('slug', '=', $plan)->with('pages')->firstOrFail();
+			$flatplan = Flatplan::where('organization_id', '=', $org->id)->where('slug', '=', $plan)->firstOrFail();
 			$page = Page::where('flatplan_id', '=', $flatplan->id)->where('page_number', '=', $number)->firstOrFail();
-			$assignment = Assignment::where('id', '=', $id)->with('users')->firstOrFail();
+			$assignment = Assignment::where('id', '=', $id)->firstOrFail();
 		}
 		catch(Exception $e) {
 			return View::make('fourOhFour');
 		}
 		try{
-			$role = Role::where('organization_id', '=', $org->id)->where('user_id', '=' Auth::user()->id)->firstOrFail();
+			$role = Role::where('organization_id', '=', $org->id)->where('user_id', '=', Auth::user()->id)->firstOrFail();
 		}
 		catch (Exception $e){
-			return Redirect::to('/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number)->with('flash_message', 'You do not have permission to edit this assignemnt');
+			return Redirect::to('/'.$org->slug)->with('flash_message', 'You do not have permission to edit this organization');
 		}
 		if($role->permissions == 'edit'){
 			return View::make('editAssignment')->with('org', $org)
@@ -68,7 +79,7 @@ class AssignmentController extends \BaseController {
 															->with('assignment', $assignment);
 		}
 		else{
-			return Redirect::to('/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number)->with('flash_message', 'You do not have permission to edit this assignemnt');
+			return Redirect::to('/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number)->with('flash_message', 'You do not have permission to edit this assignment');
 		}
 	}
 
@@ -96,8 +107,83 @@ class AssignmentController extends \BaseController {
 		$assignment->deadline = Input::get('deadline');
 		$assignment->completed = Input::get('completed');
 		$assignment->save();
-		return Redirect::back()->with('flash_message', 'Assignment updated successfully');
+		return Redirect::to('/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number)->with('flash_message', 'Assignment updated successfully');
+	}
+/**
+ * Displays the page to confirm deleting an assignment
+ *
+ *	@param $slug slug of the organization
+ * @param $plan slug of the flatplan
+ * @param $number page number to be assigned
+ * @param $id the id of the assignment
+ * @return response
+ */
+	public function getConfirmDelete ($slug, $plan, $number, $id){
+		try{
+			$org = Organization::where('slug', '=', $slug)->firstOrFail();
+			$flatplan = Flatplan::where('organization_id', '=', $org->id)->where('slug', '=', $plan)->firstOrFail();
+			$page = Page::where('flatplan_id', '=', $flatplan->id)->where('page_number', '=', $number)->firstOrFail();
+			$assignment = Assignment::where('id', '=', $id)->firstOrFail();
+		}
+		catch(Exception $e) {
+			return View::make('fourOhFour');
+		}
+		try{
+			$role = Role::where('organization_id', '=', $org->id)->where('user_id', '=', Auth::user()->id)->firstOrFail();
+		}
+		catch (Exception $e){
+			return Redirect::to('/'.$org->slug)->with('flash_message', 'You do not have permission to edit this organization');
+		}
+		if($role->permissions == 'edit'){
+			$action = 'delete this assignment';
+			$additional = null;
+			$back = '/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number.'/assignment/'.$assignment->id;
+			$url = '/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number.'/assignment/'.$assignment->id.'/delete';
+			return View::make('confirmDelete')->with('action', $action)
+															->with('additional', $additional)
+															->with('back', $back)
+															->with('url', $url);
+		}
+		else{
+			return Redirect::to('/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number)->with('flash_message', 'You do not have permission to delete this assignment');
+		}
 	}
 
+/**
+ * handle deleting an assignment
+ *
+ *	@param $slug slug of the organization
+ * @param $plan slug of the flatplan
+ * @param $number page number to be assigned
+ * @param $id the id of the assignment
+ * @return response
+ */
+
+	public function deleteAssignment ($slug, $plan, $number, $id){
+		try{
+			$org = Organization::where('slug', '=', $slug)->firstOrFail();
+			$flatplan = Flatplan::where('organization_id', '=', $org->id)->where('slug', '=', $plan)->firstOrFail();
+			$page = Page::where('flatplan_id', '=', $flatplan->id)->where('page_number', '=', $number)->firstOrFail();
+			$assignment = Assignment::where('id', '=', $id)->firstOrFail();
+		}
+		catch(Exception $e) {
+			return View::make('fourOhFour');
+		}
+		try{
+			$role = Role::where('organization_id', '=', $org->id)->where('user_id', '=', Auth::user()->id)->firstOrFail();
+		}
+		catch (Exception $e){
+			return Redirect::to('/'.$org->slug)->with('flash_message', 'You do not have permission to edit this organization');
+		}
+		if($role->permissions == 'edit'){
+				if(Input::get('_method') == 'DELETE'){
+					$assignment->delete();
+				}
+				return Redirect::to('/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number)->with('flash_message', 'Assignment deleted successfully');
+		}
+		else{
+			return Redirect::to('/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number)->with('flash_message', 'You do not have permission to delete this assignment');
+		}	
+	}
 
 }

@@ -92,7 +92,7 @@ class FlatplanController extends \BaseController {
 				$page->flatplan_id = $flatplan->id;
 				$page->save();
 				}
-			$this->match_pages($flatplan);
+			parent::match_pages($flatplan);
 			return Redirect::to('/'.$org->slug.'/'.$flatplan->slug)->with('flash_message', 'Flatplan created successfully');
 		}
 	}
@@ -192,59 +192,88 @@ class FlatplanController extends \BaseController {
 		}
 	}
 
-	/**
-	 *	Helper function that matches pages with their spread mates
-	 *
-	 *	@param $flatplan The plan whose pages need mating
-	 */
-	private function match_pages($flatplan){
-		$pages = Page::where('flatplan_id', '=', $flatplan->id)->get();
-		//$pages = $pages->sortBy('page_number');
-		foreach($pages as $page){
-			if($page->page_number == 'COVER'){
-				$page->spread_page_id = $pages->filter(function($item){return $item->page_number == 'BACK';})->first()->id;
-				$page->save();
-			}
-			elseif($page->page_number == 'BACK'){
-				$page->spread_page_id = $pages->filter(function($item){return $item->page_number == 'COVER';})->first()->id;
-				$page->save();
-			}
-			elseif($page->page_number == 'IFC'){
-				$page->spread_page_id = $pages->filter(function($item) use ($page) {return $item->page_number == 1;})->first()->id;
-				$page->save();
-			}
-			elseif($page->page_number == 'IBC'){
-				$page->spread_page_id = $pages->last()->id;
-				$page->save();
-			}
-			elseif((int)($page->page_number) == 1){
-				$page->spread_page_id = $pages->filter(function($item){return $item->page_number == 'IFC';})->first()->id;
-				$page->save();
-			}
-			elseif($page->page_number == count($pages)-4){
-				$page->spread_page_id = $pages->filter(function($item){return $item->page_number == 'IBC';})->first()->id;
-				$page->save();
-			}
-			elseif(((int)($page->page_number)) % 2 == 0){
-				try{
-					$pageOpp = $pages->filter(function($item) use ($page){return $item->page_number == ($page->page_number + 1);})->first();
-				}
-				catch(Exception $e){
-					break;
-				}
-				$page->spread_page_id = $pageOpp->id;
-				$page->save();
-			}
-			else{
-				try{
-					$pageOpp = $pages->filter(function($item) use ($page){return $item->page_number == ($page->page_number - 1);})->first();
-				}
-				catch(Exception $e){
-					break;
-				}
-				$page->spread_page_id = $pageOpp->id;
-				$page->save();
-			}
+/**
+ * Displays the page to confirm deleting an assignment
+ *
+ *	@param $slug slug of the organization
+ * @param $plan slug of the flatplan
+ * @param $number page number to be assigned
+ * @param $id the id of the assignment
+ * @return response
+ */
+	public function getConfirmDelete ($slug, $plan){
+		try{
+			$org = Organization::where('slug', '=', $slug)->firstOrFail();
+			$flatplan = Flatplan::where('organization_id', '=', $org->id)->where('slug', '=', $plan)->firstOrFail();
 		}
+		catch(Exception $e) {
+			return View::make('fourOhFour');
+		}
+		try{
+			$role = Role::where('organization_id', '=', $org->id)->where('user_id', '=', Auth::user()->id)->firstOrFail();
+		}
+		catch (Exception $e){
+			return Redirect::to('/'.$org->slug)->with('flash_message', 'You do not have permission to edit this organization');
+		}
+		if($role->permissions == 'edit'){
+			$action = 'delete flatplan '.$flatplan->name;
+			$additional = 'This will also delete all associated pages and assignments';
+			$back = '/'.$org->slug;
+			$url = '/'.$org->slug.'/'.$flatplan->slug.'/delete';
+			return View::make('confirmDelete')->with('action', $action)
+															->with('additional', $additional)
+															->with('back', $back)
+															->with('url', $url);
+		}
+		else{
+			return Redirect::to('/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number)->with('flash_message', 'You do not have permission to delete this flatplan');
+		}
+	}
+
+/**
+ * handle deleting an assignment
+ *
+ *	@param $slug slug of the organization
+ * @param $plan slug of the flatplan
+ * @param $number page number to be assigned
+ * @param $id the id of the assignment
+ * @return response
+ */
+
+	public function deleteFlatplan ($slug, $plan){
+		try{
+			$org = Organization::where('slug', '=', $slug)->firstOrFail();
+			$flatplan = Flatplan::where('organization_id', '=', $org->id)->where('slug', '=', $plan)->firstOrFail();
+		}
+		catch(Exception $e) {
+			return View::make('fourOhFour');
+		}
+		try{
+			$role = Role::where('organization_id', '=', $org->id)->where('user_id', '=', Auth::user()->id)->firstOrFail();
+		}
+		catch (Exception $e){
+			return Redirect::to('/'.$org->slug)->with('flash_message', 'You do not have permission to edit this organization');
+		}
+		if($role->permissions == 'edit'){
+			$pages = Page::where('flatplan_id', '=', $flatplan->id)->get();
+			if($pages){
+				DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+				foreach ($pages as $page) {
+					$assignments = Assignment::where('page_id', '=', $page->id)->get();
+					if($assignments){
+						foreach($assignments as $assignment){
+							$assignment->delete();
+						}
+					}
+					$page->delete();
+				}
+				DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+			}
+			$flatplan->delete();
+			return Redirect::to('/'.$org->slug)->with('flash_message', 'Flatplan deleted successfully');
+		}
+		else{
+			return Redirect::to('/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number)->with('flash_message', 'You do not have permission to delete this flatplan');
+		}	
 	}
 }

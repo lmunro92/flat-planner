@@ -1,10 +1,10 @@
 @extends('layouts._master')
 
 @section('banner')
-	<h1>Editing {{$assignment->user->username}}'s assignment on page {{$page->page_number}} in {{$flatplan->'name'}} from {{$org->'name'}}</h1>
+	<h1>Editing {{$assignment->user->username}}'s assignment</h1>
 @stop
 @section('content')
-	{{Form::open(array('url'=>'/'.$org->slug.'/'.$flatplan->slug.'/'.$page->number.'/create-assignment', 'method'=>'POST'))}}
+	{{Form::open(array('url'=>'/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number.'/assignment/'.$assignment->id, 'method'=>'PUT'))}}
 		<div class="form-line">
 			{{Form::label('deadline', 'Deadline: ')}}
 			{{Form::text('deadline', $assignment->deadline, array('class'=>'flat-text'))}}
