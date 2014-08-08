@@ -19,7 +19,7 @@ class AssignmentController extends \BaseController {
 	public function postCreateAssignment($slug, $plan, $number){
 		try{
 			$org = Organization::where('slug', '=', $slug)->firstOrFail();
-			$flatplan = Flatplan::where('organization_id', '=', $org->id)->where('slug', '=', $plan)->with('pages')->firstOrFail();
+			$flatplan = Flatplan::where('organization_id', '=', $org->id)->where('slug', '=', $plan)->firstOrFail();
 			$page = Page::where('flatplan_id', '=', $flatplan->id)->where('page_number', '=', $number)->firstOrFail();
 			$user = User::where('id', '=', Input::get('user'))->firstOrFail();
 		}
@@ -27,10 +27,11 @@ class AssignmentController extends \BaseController {
 			return View::make('fourOhFour');
 		}
 		try {
-			$role = Role::where('user_id', '=', Auth::user()->id)->where('page_id', '=', $page->id)->firstOrFail;
+			$role = Role::where('user_id', '=', Auth::user()->id)->where('organization_id', '=', $org->id)->firstOrFail();
 		}
 		catch(Exception $e) {
-			return Redirect::to('/'.$org->slug)->with('flash_message', 'You do not have permission to edit this Organization.');
+			dd($org->id);
+			return Redirect::to('/'.$org->slug)->with('flash_message', 'You do not have permission to edit this organization.');
 		}
 		if ($role->permissions == 'edit'){
 			$assignment = new Assignment();
@@ -39,10 +40,10 @@ class AssignmentController extends \BaseController {
 			$assignment->user_id = $user->id;
 			$assignment->page_id = $page->id;
 			$assignment->save();
-			return Redirect::back()->with('flash_message', 'Assignment created successfully');
+			return Redirect::to('/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number)->with('flash_message', 'Assignment created successfully');
 		}
 		else{
-			return Redirect::to('/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number)->with('flash_message', 'You do not have permission to create pages in this Flatplan.');
+			return Redirect::to('/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number)->with('flash_message', 'You do not have permission to create assignments in this Flatplan.');
 		}
 	}
 

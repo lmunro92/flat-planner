@@ -75,7 +75,9 @@
 	<div class="page-assignments">
 		<h3>Assignments</h3>
 		<div class="list-header">
-			<div class="list-col1">
+			<div class="list-col-delete">
+			</div>						
+			<div class="list-col">
 				<h4>Deadline</h4>
 			</div>
 			<div class="list-col">
@@ -88,11 +90,16 @@
 		@if($assignments)
 			@foreach ($assignments as $assignment)
 				<div class="list-line">
-					<div class="list-col1">
+					<div class="list-col-delete">
+						@if($permission == 'edit')
+							<p class="delete-x"><a href="/{{$org->slug}}/{{$flatplan->slug}}/{{$page->page_number}}/assignment/{{$assignment->id}}/delete">X</a></p>
+						@endif
+					</div>					
+					<div class="list-col">
 						<p>{{{$assignment->deadline}}}</p>
 					</div>
 					<div class="list-col">
-						<p>{{{$assignment->user->username}}}</p>
+						<p><a href="/user/{{{$assignment->user->username}}}">{{{$assignment->user->username}}}</a></p>
 					</div>
 					<div class="list-col-notes">
 						<p><em>{{{$assignment->description}}}</em></p>
@@ -103,7 +110,7 @@
 		@if($permission == 'edit')
 			{{Form::open(array('url'=>'/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number.'/create-assignment', 'method'=>'POST'))}}
 				<div class="list-line">
-					<div class="list-col1">
+					<div class="list-col">
 						<p>{{Form::text('deadline', '', array('class'=>'flat-text', 'size'=>'15'))}}</p>
 					</div>
 					<div class="list-col">

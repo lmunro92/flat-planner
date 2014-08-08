@@ -200,19 +200,19 @@ p.copyright {
 	margin-top: 0;
 	}
 
-.list-col1{
+.list-col-delete{
 	display: inline-block;
-	width: 195px;
+	width: 20px;
 }
 
 .list-col{
 	display: inline-block;
-	width: 195px;
+	width: 185px;
 }
 
 .list-col-notes{
 	display: inline-block;
-	width: 395px;
+	width: 380px;
 }
 
 .list-header{
