@@ -5,7 +5,6 @@ body{
 }
 
 header{
-	position: fixed;
 	width: 100%;
 	background-color: white;
 	border-bottom: 4px solid black;
@@ -13,7 +12,7 @@ header{
 
 article {
 	background: white;
-	padding-top: 120px;
+	padding-top: 40px;
 	padding-left: 40px;
 	padding-right: 40px;
 	padding-bottom: 80px;
@@ -106,37 +105,88 @@ input.flat-button:hover {
 
 /*** HEADER ***/
 
-div.logo-box{
-	width: 100px;
-	float: left;
-	margin: 10px 30px;
+.logo-box{
+	width: 8%;
+	display: inline-block;
+	margin: 10px 0;
 }
 
 img.fplogo{
-	width: 100%;
+	width: 100px;
 }
 
-div.credentials {
+.credentials {
 	font-family: 'futura-pt', 'helvetica', 'arial', sans-serif;
 	font-size: 1em;
 	font-weight: 300;
 	text-transform: uppercase;
+	display: inline-block;
+	text-align: right;
+	width: auto;
 	position: absolute;
-	right: 15px;
-	top: 65px;
+	right: 0;
+	padding: 15px 5px;
 }
 
 .banner {
- 	width: 800px;
+ 	width: 990px;
  	text-align: center;
- 	margin-top: 15px;
- 	margin-bottom: 0;
- 	margin-left: auto;
- 	margin-right: auto;
+ 	margin: 0 auto;
+ 	display: inline-block;
 }	
 
-/*** NAV TREE ***/
+.flash{
+	font-family: 'futura-pt', 'helvetica', 'arial', sans-serif;
+	font-weight: 300;
+	font-size: 1.3em;
+	clear: both;
+	width: 100%;
+	text-align: center;
+	background-color: #62F07F;
+	border-bottom: 1px solid black;
+	padding: 5px 0;
+}
 
+.header-line {
+	width: 100%;
+	margin: 0 auto;
+
+}
+
+.flash-line {
+	width: 100%;
+}
+
+/*** MISCELLANY ***/
+.delete-x{
+	font-family: 'futura-pt', 'helvetica', 'arial', sans-serif;
+	text-transform: lowercase;
+	font-weight: 100;
+	font-size: 2em;
+	line-height: 0;
+}
+
+.delete-x a{
+	color: #D61818;
+}
+
+.delete-x a:hover {
+	text-decoration: none;
+}
+
+.back {
+
+}
+
+.back-text {
+	font-family: 'futura-pt', 'helvetica', 'arial', sans-serif;
+	text-transform: uppercase;
+	color: #555555;
+}
+
+.back-text a{
+	color: #555555;
+}
 
 /*** FOOTER ***/
 
@@ -364,7 +414,9 @@ div.flatplan-page-number p{
 	padding: 130px 0;
 }
 
-.page-info{
+div.page-info p{
+	font-family: 'futura-pt', 'helvetica', 'arial', sans-serif;
+	font-size: 1.8em;
 }
 
 .page-block{
@@ -432,6 +484,7 @@ div.flatplan-page-number p{
 	text-align: center;
 	margin-top: 15px;
 	}
+
 
 /*** HOMEPAGE ***/
 .welcome-wrap{

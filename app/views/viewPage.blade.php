@@ -5,8 +5,8 @@
 @stop
 
 @section('content')
-<div class="nav-tree">
-	<span class="tree-text">/ <a href="/{{{$org->slug}}}">{{{$org->name}}}</a> / <a href="/{{{$org->slug}}}/{{{$flatplan->slug}}}">{{{$flatplan->name}}}</a> / {{{$page->page_number}}}</span>
+<div class="back">
+	<span class="back-text">:: <a href="/{{{$org->slug}}}/{{{$flatplan->slug}}}/">Back</a> ::</span>
 </div>
 <div class="page-block">
 	<div class="page-wrapper">
@@ -15,7 +15,9 @@
 		<div class="page-info">
 			<p>{{{$page->page_number}}}</p>
 			<p>{{{$page->slug}}}</p>
-			<p><a href="/{{{$org->slug}}}/{{{$flatplan->slug}}}/{{{$page->page_number}}}/edit">Edit Page</a></p>
+			@if($permission == 'edit')
+				<p><a href="/{{{$org->slug}}}/{{{$flatplan->slug}}}/{{{$page->page_number}}}/edit">Edit Page</a></p>
+			@endif
 		</div>
 	</div>
 	<div class="page-notes">

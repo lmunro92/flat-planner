@@ -8,9 +8,6 @@
 
 {{--show the logo and vital info of the org in the top-left corner --}}
 @section('content')
-<div class="nav-tree">
-	<span class="tree-text">/ {{{$org->name}}}</a> /</span>
-</div>
 <div class="page-block">
 	<div class="nameplate">
 		<div class="nameplate-image">

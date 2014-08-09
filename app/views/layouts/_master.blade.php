@@ -15,6 +15,13 @@
 	<header>
 		@include('layouts._header')
 	</header>
+	@if(Session::get('flash_message'))
+		<div class="flash-line">
+			<div class="flash">
+				{{Session::get('flash_message')}}
+			</div>
+	</div>
+	@endif
 	<article>
 		<div class="wrapper">
 			@yield('content')

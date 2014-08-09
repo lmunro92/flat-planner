@@ -5,8 +5,8 @@
 @stop
 
 @section('content')
-<div class="nav-tree">
-	<span class="tree-text">/ <a href="/{{{$org->slug}}}">{{{$org->name}}}</a> / {{{$flatplan->name}}}</a></span>
+<div class="back">
+	<span class="back-text">:: <a href="/{{{$org->slug}}}/">Back</a> ::</span>
 </div>
 <div class="flatplan-info">
 	<div class="flatplan-info-block">
