@@ -3,7 +3,7 @@
 @extends('layouts._master')
 
 @section('banner')
-	<h1>Create/Edit Organization</h1>
+	<h1>Create New Organization</h1>
 @stop
 
 @section('content')
