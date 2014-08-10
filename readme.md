@@ -13,7 +13,9 @@ Every user account includes an organization account of the same name, which can 
 
 ##Details for teaching team
 Feel free to create an account and test out the features. If you'd like to see an example of a fully setup account, login as:
+
 username: `dwa15`
+
 password: `NorthwestB103`
 
 There will be an example flatplan with a number of pages and assignments made.
