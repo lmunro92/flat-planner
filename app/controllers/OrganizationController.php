@@ -20,6 +20,7 @@ class OrganizationController extends \BaseController {
 
  	public function __contruct()
 	{
+		parent::__construct();
 		$this->beforeFilter('auth', array('except' => array('getOrganization')));
 	}
 

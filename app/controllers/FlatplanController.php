@@ -73,7 +73,7 @@ class FlatplanController extends \BaseController {
 		else{
 			$flatplan = new Flatplan();
 			$flatplan->name = Input::get('name');
-			$flatplan->slug = Parent::create_slug(Input::get('name'));
+			$flatplan->slug = parent::create_slug(Input::get('name'));
 			$flatplan->pub_date = Input::get('publication_date');
 			$flatplan->organization_id = $org->id;
 			$flatplan->user_id = 1;

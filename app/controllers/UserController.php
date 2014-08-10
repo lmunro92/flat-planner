@@ -47,7 +47,7 @@ class UserController extends \BaseController {
 		$user = new User();
 		$user->first_name = Input::get('first-name');
 		$user->last_name = Input::get('last-name');
-		$user->username = Parent::create_slug(Input::get('username'));
+		$user->username = parent::create_slug(Input::get('username'));
 		$user->email = Input::get('email');
 		$user->password = Hash::make(Input::get('password'));
 		if(Input::has('image_url')){
@@ -70,7 +70,7 @@ class UserController extends \BaseController {
 		//Create a personal organization for each user
 		$org = new Organization();
 		$org->name = $user->first_name.' '.$user->last_name;
-		$org->slug = Parent::create_slug(Input::get('username'));
+		$org->slug = parent::create_slug(Input::get('username'));
 		if(Input::has('image_url')){
 			$org->image_url = Input::get('image_url');
 		}

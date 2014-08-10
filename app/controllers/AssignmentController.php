@@ -4,6 +4,7 @@ class AssignmentController extends \BaseController {
 
 	public function __contruct()
 	{	
+		parent::__construct();
 		$this->beforeFilter('auth');	
 	}
 
