@@ -17,7 +17,7 @@ class UserController extends \BaseController {
 	{
 		parent::__construct();
 		$this->beforeFilter('guest', array('only' => array('create', 'store', 'getLogin', 'postLogin')));
-		$this->beforeFilter('auth', array('only' => array('edit', 'update', 'getLogout')));
+		$this->beforeFilter('auth', array('only' => array('edit', 'update', 'getLogout', 'index')));
 	}
 
 	/**
@@ -27,7 +27,7 @@ class UserController extends \BaseController {
 	 */
 	public function index()
 	{
-		//
+			return Redirect::to('user/'.Auth::user()->username);
 	}
 
 
@@ -59,7 +59,12 @@ class UserController extends \BaseController {
 		$user->username = Parent::create_slug(Input::get('username'));
 		$user->email = Input::get('email');
 		$user->password = Hash::make(Input::get('password'));
-		$user->image_url = Input::get('image_url');
+		if(Input::has('image_url')){
+			$user->image_url = Input::get('image_url');
+		}
+		else{
+			$user->image_url = '/assets/image/logo.svg';
+		}
 		$user->website_url = Input::get('website_url');
 		$user->city = Input::get('city');
 		$user->state = Input::get('state');
@@ -73,9 +78,14 @@ class UserController extends \BaseController {
 		}
 		//Create a personal organization for each user
 		$org = new Organization();
-		$org->name = Input::get('first-name').' '.Input::get('last-name');
+		$org->name = $user->first_name.' '.$user->last_name;
 		$org->slug = Parent::create_slug(Input::get('username'));
-		$org->image_url = Input::get('image_url');
+		if(Input::has('image_url')){
+			$org->image_url = Input::get('image_url');
+		}
+		else{
+			$org->image_url = '/assets/image/logo.svg';
+		}
 		$org->website_url = Input::get('website_url');
 		$org->description = Input::get('profile');
 		$org->city = Input::get('city');
@@ -89,7 +99,7 @@ class UserController extends \BaseController {
 			}
 		//make user the editor of that organization
 		$role = new Role();
-		$role->title = 'Personal Projects';
+		$role->title = 'personal project';
 		$role->permissions = 'edit';
 		$role->organization_id = $org->id;
 		$role->user_id = $user->id;
@@ -173,7 +183,9 @@ class UserController extends \BaseController {
 		}
 		$user->first_name = Input::get('first-name');
 		$user->last_name = Input::get('last-name');
-		$user->image_url = Input::get('image_url');
+		if(Input::has('image_url')){
+			$user->image_url = Input::get('image_url');
+		}
 		$user->website_url = Input::get('website_url');
 		$user->city = Input::get('city');
 		$user->state = Input::get('state');
@@ -218,7 +230,7 @@ class UserController extends \BaseController {
 		}
 		if(Hash::check(Input::get('password'), $user->password)){
 			Auth::login($user, Input::get('remember'));
-			return Redirect::intended('/'.$user->username)->with('flash_message', 'Login successful. Welcome back, '.$user->first_name);
+			return Redirect::intended('/user/'.$user->username)->with('flash_message', 'Login successful. Welcome back, '.$user->first_name);
 		}
 		else{
 			return Redirect::to('/login')->withInput()->with('flash_message', 'Invalid password');

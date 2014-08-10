@@ -8,7 +8,7 @@
 @section('content')
 <div class="form-errors">
 	@foreach($errors as $error)
-		<p class="error-message">{{$error}}</p>
+		<p class="error-message">{{$error->message}}</p>
 	@endforeach
 </div>
 {{Form::open(array('url'=>'/user/', 'method'=>'POST', 'class'=>'fp-form'))}}
@@ -56,7 +56,7 @@
 		{{Form::textarea('profile', '', array('class'=>'flat-text-area'))}}
 	</div>
 	<div class="form-line">
-		{{Form::submit('Create');}}
+		{{Form::submit('Create', array('class'=>'flat-button'));}}
 	</div>
 {{ Form::close() }}
 @stop

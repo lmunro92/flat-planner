@@ -12,8 +12,8 @@
 	@endif
 	<p>This cannot be undone.</p>
 	{{Form::open(array('url'=>$url, 'method'=>'DELETE'))}}
-	{{Form::submit('Delete')}}
-	<a href="{{$back}}"><div classs="back">BACK</back></a>
+	{{Form::submit('Delete', array('class'=>'flat-button'))}}
+	<a href="{{$back}}" class="back-button">BACK</a>
 	{{Form::close()}}
 </div>
 @stop

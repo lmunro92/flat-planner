@@ -20,6 +20,6 @@
 		{{Form::checkbox('remember', true, true, array('class'=>'flat-check'))}}
 		{{Form::label('remember', 'Remember Me')}}
 	</div>
-	{{Form::submit('Login')}}
+	{{Form::submit('Login', array('class'=>'flat-button'))}}
 {{Form::close()}}
 @stop

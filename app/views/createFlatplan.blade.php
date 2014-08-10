@@ -26,7 +26,7 @@
 		<p>Must be an even number, greater than 2</p>
 	</div>
 	<div class="form-line">
-		{{Form::submit('Create');}}
+		{{Form::submit('Create', array('class'=>'flat-button'));}}
 	</div>
 {{ Form::close() }}
 @stop

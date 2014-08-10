@@ -3,7 +3,7 @@
 		<div class="bottom-nav-item">About</div>
 		<div class="bottom-nav-item">Contact</div> --}}
 	<div class="bottom-center">
-		<p class="copyright">Created by Jonathan Seitz | © 2014</p>
+		<p class="copyright">Created by Jonathan Seitz</p>
 	</div>
 </div>
 

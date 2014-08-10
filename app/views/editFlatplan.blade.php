@@ -16,7 +16,7 @@
 		{{Form::text('publication_date', $flatplan->pub_date, array('class'=>'flat-text', 'size'=>'50'));}}
 	</div>
 	<div class="form-line">
-		{{Form::submit('Update');}}
+		{{Form::submit('Update', array('class'=>'flat-button'));}}
 	</div>
 {{ Form::close() }}
 @stop

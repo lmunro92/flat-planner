@@ -18,7 +18,7 @@
 			{{Form::textarea('description', $assignment->description, array('class'=>'flat-text-area'))}}
 		</div>
 		<div class="assignemnt-line">
-			{{Form::submit('Update')}}
+			{{Form::submit('Update', array('class'=>'flat-button'))}}
 		</div>	
 	{{Form::close()}}
 @stop

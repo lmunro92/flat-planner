@@ -49,7 +49,7 @@
 		<div class="list-line">
 			<div class="list-col-delete">
 				@if($permission == 'self')
-					<p class="delete-x"><a href="/{{$role->organization->slug}}/remove">X</a></p>
+					<p class="delete-x"><a href="/{{$role->organization->slug}}/{{$user->username}}/remove">X</a></p>
 				@endif
 			</div>		
 			<div class="list-col">
@@ -65,7 +65,13 @@
 			@endif
 		</div>
 		@endforeach
+		@if($permission == 'self')
+			<div class="add-line">
+				<p><a href="/create-organization">Create New Organization</a></p>
+			</div>
+		@endif
 	</div>
+
 </div>
 
 @if($permission == 'self')

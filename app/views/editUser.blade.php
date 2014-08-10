@@ -17,7 +17,6 @@
 		{{Form::label('image_url', 'Image URL: ')}}
 		{{Form::text('image_url', $user['image_url'], array('class'=>'flat-text', 'size'=>'50'))}}
 	</div>
-</div>
 	<div class="form-line">
 		{{Form::label('website', "Website URL: ")}}
 		{{Form::text('website', '', array('class'=>'flat-text', 'size'=>'50'))}}
@@ -37,7 +36,7 @@
 		{{Form::textarea('profile', $user['bio'], array('class'=>'flat-text-area'))}}
 	</div>
 	<div class="form-line">
-		{{Form::submit('update');}}
+		{{Form::submit('update', array('class'=>'flat-button'));}}
 	</div>
 {{ Form::close() }}
 @stop

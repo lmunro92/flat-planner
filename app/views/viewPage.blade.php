@@ -16,7 +16,7 @@
 			<p>{{{$page->page_number}}}</p>
 			<p>{{{$page->slug}}}</p>
 			@if($permission == 'edit')
-				<p><a href="/{{{$org->slug}}}/{{{$flatplan->slug}}}/{{{$page->page_number}}}/edit">Edit Page</a></p>
+				<p><a href="/{{{$org->slug}}}/{{{$flatplan->slug}}}/{{{$page->page_number}}}/edit">EDIT</a> | <a href="/{{{$org->slug}}}/{{{$flatplan->slug}}}/{{{$page->page_number}}}/delete" class="page-delete">DELETE</a></p>
 			@endif
 		</div>
 	</div>
@@ -124,8 +124,7 @@
 				</div>
 				<div class="list-line-last">
 					<div class="assignment-line-button">
-						<p>{{Form::submit('Assign', array('class'=>'flat-button'
-						))}}</p>
+						<p>{{Form::submit('Assign', array('class'=>'flat-button'))}}</p>
 					</div>	
 				{{Form::close()}}
 			</div>

@@ -10,8 +10,10 @@
 <?php $colors = array('white'=>'White', 'whitesmoke'=>'Grey', 'blue'=>'Blue', 'red'=>'Red', 'blueviolet'=>'Violet'); ?>
 {{Form::open(array('url'=>'/'.$org->slug.'/'.$flatplan->slug.'/'.$page->page_number.'/edit', 'method'=>'PUT', 'class'=>'fp-form'));}}
 	<div class="form-line">
-		{{Form::label('slug', 'Slug: ');}}
-		{{Form::text('slug', $page->slug, array('class'=>'flat-text', 'size'=>'50'));}}
+		{{Form::label('slug', 'Slug (15 characters max): ');}}
+		{{Form::text('slug', $page->slug, array('class'=>'flat-text', 'size'=>'30', 'maxlength'=>'15'));}}
+	</div>
+	<div class="form-line">
 		{{Form::label('color', 'Color: ');}}
 		{{Form::select('color', $colors, $page->color, array('class'=>'flat-select'))}}
 	</div>
@@ -42,7 +44,7 @@
 		{{Form::label('close', 'Close')}}
 	</div>
 	<div class="form-line">
-		{{Form::submit('update');}}
+		{{Form::submit('update', array('class'=>'flat-button'));}}
 	</div>
 {{ Form::close() }}
 @stop

@@ -83,12 +83,14 @@ class FlatplanController extends \BaseController {
 				$page = new Page();
 				$page->page_number = $cover;
 				$page->flatplan_id = $flatplan->id;
+				$page->slug = ' ';
 				$page->cover = true;
 				$page->save();
 			}
 			for($i = 1; $i <= Input::get('pages'); $i++){
 				$page = new Page();
 				$page->page_number = $i;
+				$page->slug = ' ';
 				$page->flatplan_id = $flatplan->id;
 				$page->save();
 				}

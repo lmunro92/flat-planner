@@ -174,9 +174,26 @@ img.fplogo{
 	text-decoration: none;
 }
 
-.back {
-
+.back-button {
+	font-family: 'futura-pt', 'helvetica', 'arial', sans-serif;
+	font-size: 1em;
+	margin: 2px 2px 2px 50px;
+	width: 63px;
+	background: white;
+	border: 2px solid black;
+	padding: 5px 20px;
+	text-align: center;
+	text-transform: uppercase;
+	display: inline-block;
+	color: black;
 }
+
+a.back-button:hover {
+	background: #DADADA;
+	color: black;
+	text-decoration: none;
+}
+
 
 .back-text {
 	font-family: 'futura-pt', 'helvetica', 'arial', sans-serif;
@@ -237,9 +254,10 @@ p.copyright {
 	font-size: 0.8em;
 }
 
-.nameplate-edit {
+.nameplate-edit p {
 	font-family: 'futura-pt', 'helvetica', 'arial', sans-serif;
-	font-weight: 300;
+	font-size: 1.2em;
+	font-weight: 500;
 	text-align: right;
 	text-transform: uppercase;
 }
@@ -358,7 +376,7 @@ div.add-line p{
 }
 
 .flatplan-page-wrap{
-	width: 120px;
+	width: 140px;
 	display: inline-block;
 	margin-right: -2px;
 	margin-bottom: 40px;
@@ -367,22 +385,22 @@ div.add-line p{
 .flatplan-page{
 	border: 2px solid black;
 	width: 100%;
-	padding-top: 80px;
-	padding-bottom: 80px;
+	padding-top: 95px;
+	padding-bottom: 95px;
 }
 
 .flatplan-cover{
 	border: 2px solid black;
 	width: 100%;
-	padding-top: 80px;
-	padding-bottom: 80px;
+	padding-top: 95px;
+	padding-bottom: 95px;
 }
 
 .flatplan-back{
 	border: 2px solid black;
 	width: 100%;
-	padding-top: 80px;
-	padding-bottom: 80px;
+	padding-top: 95px;
+	padding-bottom: 95px;
 }
 
 .flatplan-page-number{
@@ -398,6 +416,12 @@ div.flatplan-page-number p{
 .flatplan-page-spacer{
 	display: inline-block;
 	width: 20px;
+}
+
+.flatplan-invisible-page{
+	display: inline-block;
+	width: 165px;
+	margin-left: -2px;
 }
 
 /*** PAGE ***/
@@ -416,7 +440,7 @@ div.flatplan-page-number p{
 
 div.page-info p{
 	font-family: 'futura-pt', 'helvetica', 'arial', sans-serif;
-	font-size: 1.8em;
+	font-size: 1.5em;
 }
 
 .page-block{
@@ -485,6 +509,16 @@ div.page-info p{
 	margin-top: 15px;
 	}
 
+.page-link{
+	display: block;
+	width: 100%;
+}
+
+.page-delete{
+	color: #D61818;
+}
+
+
 
 /*** HOMEPAGE ***/
 .welcome-wrap{
@@ -512,4 +546,22 @@ div.welcome h1 {
 	border: 2px solid black;
 	padding: 0 15px;
 	margin: 0 15px;
+}
+
+.get-started{
+	font-family: 'futura-pt', 'helvetica', 'arial', sans-serif;
+	font-size: 2em;
+	border: 2px solid black;
+	padding: 10px 25px;
+	display: block;
+	width: 400px;
+	margin: 40px auto;
+	text-align: center;
+	text-transform: uppercase;
+	background: #62F07F;
+}
+
+a.get-started:hover{
+	color: black;
+	text-decoration: none;
 }

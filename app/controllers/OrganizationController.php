@@ -50,7 +50,12 @@ class OrganizationController extends \BaseController {
 			$org->name = Input::get('organization-name');
 			$slug = parent::create_slug(Input::get('organization-name'));
 			$org->slug = $slug;
-			$org->image_url = Input::get('image_url');
+			if(Input::get('image_url')){
+				$org->image_url = Input::get('image_url');
+			}
+			else {
+				$org->image_url = '/assets/image/logo.svg';
+			}
 			$org->website_url= Input::get('website');
 			$org->description = Input::get('description');
 			$org->city = Input::get('city');
@@ -161,7 +166,9 @@ class OrganizationController extends \BaseController {
 				}
 				else{
 					$org->name = Input::get('organization-name');
-					$org->image_url = Input::get('image_url');
+					if(Input::get('image_url')){
+						$org->image_url = Input::get('image_url');
+					}
 					$org->website_url = Input::get('website');
 					$org->description = Input::get('description');
 					$org->city = Input::get('city');
@@ -226,6 +233,115 @@ class OrganizationController extends \BaseController {
 		}
 		else{
 			return Redirect::to('/login');
+		}
+	}
+
+	/**
+	 * Displays the page to confirm deleting an assignment
+	 *
+	 *	@param $slug slug of the organization
+	 * @param $plan slug of the flatplan
+	 * @param $number page number to be assigned
+	 * @param $id the id of the assignment
+	 * @return response
+	 */
+	public function getConfirmDelete ($slug, $user){	
+		try{
+			$org = Organization::where('slug', '=', $slug)->firstOrFail();
+			$user = User::where('username', '=', $user)->firstOrFail();
+		}
+		catch(Exception $e) {
+			return View::make('fourOhFour');
+		}
+		try{
+			$role = Role::where('organization_id', '=', $org->id)->where('user_id', '=', $user->id)->firstOrFail();
+		}
+		catch(Exception $e){
+			return Redirect::to('/'.$org->slug)->with('flash_message', 'That is not a member of this organization');
+		}
+		if($org->slug == $user->username){
+			return Redirect::back()->with('flash_message', 'Users cannot be removed from their personal projects');
+		}
+		if ($user->id == Auth::user()->id){
+			$action = 'remove yourself from this organization';
+		}
+		else {
+			$action = 'remove '.$user->username.' from this organization';
+		}
+		if (count($org->roles) == 1){
+			$additional = 'Since you are the only member, this will also delete the organization and all associated flatplans, pages, and assignment';
+		}
+		else {
+			$additional = 'This will also delete all associated assignments';
+		}
+		$url = '/'.$org->slug.'/'.$user->username.'/remove';
+		$back = '/'.$org->slug;
+		return View::make('confirmDelete')->with('action', $action)
+															->with('additional', $additional)
+															->with('back', $back)
+															->with('url', $url);
+	}
+
+	 /**
+	 * handle removing a user. If the organization has no more users, delete the 
+	 * organization. Users cannot be removed from their personal organizations.
+	 *
+	 *	@param $slug slug of the organization
+	 * @param $plan slug of the flatplan
+	 * @param $number page number to be assigned
+	 * @param $id the id of the assignment
+	 * @return response
+	 */
+
+	public function deleteRole ($slug, $user){
+		try{
+			$org = Organization::where('slug', '=', $slug)->with('flatplans.pages.assignments')->firstOrFail();
+			$user = User::where('username', '=', $user)->firstOrFail();
+			$role = Role::where('organization_id', '=', $org->id)->where('user_id', '=', $user->id)->firstOrFail();
+		}
+		catch(Exception $e) {
+			return View::make('fourOhFour');
+		}
+		if($org->slug == $user->username){
+			return Redirect::to('/'.$org->slug)->with('flash_message', 'Users cannot be removed from their personal projects');
+		}
+		elseif(count($org->roles) > 1){
+			DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+			if($org->flatplans){
+				foreach($org->flatplans as $flatplan){
+					foreach($flatplan->pages as $page){
+						if($page->assignments){
+							foreach($page->assignments  as $assignment){
+								if($assignment->user_id == $user->id){
+									$assignment->delete();
+								}
+							}
+						}
+					}
+				}
+			}
+			$role->delete();
+			return Redirect::to('/'.$org->slug)->with('flash_message', 'Successfully removed from organization');
+		}
+		elseif(count($org->roles) == 1){
+			DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+			if($org->flatplans){
+				foreach($org->flatplans as $flatplan){
+					foreach($flatplan->pages as $page){
+						if($page->assignments){
+							foreach($page->assignments as $assignment){
+								$assignment->delete();
+							}
+						}
+						$page->delete();
+					}
+					$flatplan->delete();
+				}
+			}
+			$role->delete();
+			$org->delete();
+			DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+			return Redirect::to('/')->with('flash_message', 'Organization deleted');
 		}
 	}
 }

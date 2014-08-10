@@ -28,13 +28,16 @@
 </div>
 
 <div class="flatplan-graphics">
+	<div class="flatplan-invisible-page">
+	</div>
 	<div class="flatplan-page-wrap">
-		<div class="flatplan-cover">
+		<div class="flatplan-cover" style="background:{{$covers->filter(function($page){return $page->page_number == 'COVER';})->first()->color;}}">
 		</div>
 		<div class="flatplan-page-number">
 			<div class="page-number">
 				<p><a href="/{{$org->slug}}/{{$flatplan->slug}}/COVER">{{$covers->filter(function($page){return $page->page_number == 'COVER';})->first()->page_number;}}</a></p>
-				<p><a href="/{{$org->slug}}/{{$flatplan->slug}}/COVER">{{$covers->filter(function($page){return $page->page_number == 'COVER';})->first()->slug;}}</a>&nbsp;</p>
+				<p><a href="/{{$org->slug}}/{{$flatplan->slug}}/COVER">{{$covers->filter(function($page){return $page->page_number == 'COVER';})->first()->slug;}}&nbsp;</a></p>
+				<p><a href="/{{$org->slug}}/{{$flatplan->slug}}/COVER/edit">EDIT</a></p>
 			</div>
 		</div>
 	</div>
@@ -43,11 +46,12 @@
 	</div>
 
 	<div class="flatplan-page-wrap">
-		<div class="flatplan-page">
+		<div class="flatplan-page" style="background:{{$covers->filter(function($page){return $page->page_number == 'IFC';})->first()->color;}}">
 		</div>
 		<div class="flatplan-page-number">
 			<p><a href="/{{$org->slug}}/{{$flatplan->slug}}/IFC">{{$covers->filter(function($page){return $page->page_number == 'IFC';})->first()->page_number;}}</a></p>
 			<p><a href="/{{$org->slug}}/{{$flatplan->slug}}/IFC">{{$covers->filter(function($page){return $page->page_number == 'IFC';})->first()->slug;}}</a>&nbsp;</p>
+			<p><a href="/{{$org->slug}}/{{$flatplan->slug}}/IFC/edit">EDIT</a></p>
 		</div>
 	</div>
 
@@ -55,11 +59,12 @@
 
 	@foreach($pages as $page)	
 		<div class="flatplan-page-wrap">
-			<div class="flatplan-page">
+			<div class="flatplan-page" style="background:{{$page->color}}">
 			</div>
 			<div class="flatplan-page-number">
-				<p><a href="/{{$org->slug}}/{{$flatplan->slug}}/{{$page->page_number}}">{{{$page->page_number}}}</a></p>
-				<p><a href="/{{$org->slug}}/{{$flatplan->slug}}/{{$page->page_number}}">{{{$page->slug}}}</a>&nbsp;</p>
+				<p><a href="/{{$org->slug}}/{{$flatplan->slug}}/{{$page->page_number}}" class="page-link">{{{$page->page_number}}}</a></p>
+				<p><a href="/{{$org->slug}}/{{$flatplan->slug}}/{{$page->page_number}}" class="page-link">{{{$page->slug}}}&nbsp;</a></p>
+				<p><a href="/{{$org->slug}}/{{$flatplan->slug}}/{{$page->page_number}}/edit">EDIT</a> | <a href="/{{$org->slug}}/{{$flatplan->slug}}/{{$page->page_number}}/delete" class="page-delete">DELETE</a>
 			</div>
 		</div>
 		@if($page->page_number % 2 != 0)
@@ -69,11 +74,12 @@
 
 
 	<div class="flatplan-page-wrap">
-		<div class="flatplan-page">
+		<div class="flatplan-page" style="background:{{$covers->filter(function($page){return $page->page_number == 'IBC';})->first()->color;}}">
 		</div>
 		<div class="flatplan-page-number">
 			<p><a href="/{{$org->slug}}/{{$flatplan->slug}}/IBC">{{$covers->filter(function($page){return $page->page_number == 'IBC';})->first()->page_number;}}</a></p>
-			<p><a href="/{{$org->slug}}/{{$flatplan->slug}}/IBC">{{$covers->filter(function($page){return $page->page_number == 'IBC';})->first()->slug;}}</a>&nbsp;</p>
+			<p><a href="/{{$org->slug}}/{{$flatplan->slug}}/IBC">{{$covers->filter(function($page){return $page->page_number == 'IBC';})->first()->slug;}}&nbsp;</a></p>
+			<p><a href="/{{$org->slug}}/{{$flatplan->slug}}/IBC/edit">EDIT</a></p>
 		</div>
 	</div>
 
@@ -81,13 +87,16 @@
 	</div>
 
 	<div class="flatplan-page-wrap">
-		<div class="flatplan-back">
+		<div class="flatplan-back" style="background:{{$covers->filter(function($page){return $page->page_number == 'BACK';})->first()->color;}}">
 		</div>
 		<div class="flatplan-page-number">
 			<p><a href="/{{$org->slug}}/{{$flatplan->slug}}/BACK">{{$covers->filter(function($page){return $page->page_number == 'BACK';})->first()->page_number;}}</a></p>
-			<p><a href="/{{$org->slug}}/{{$flatplan->slug}}/BACK">{{$covers->filter(function($page){return $page->page_number == 'BACK';})->first()->slug;}}</a>&nbsp;</p>
+			<p><a href="/{{$org->slug}}/{{$flatplan->slug}}/BACK">{{$covers->filter(function($page){return $page->page_number == 'BACK';})->first()->slug;}}&nbsp;</a></p>
+			<p><a href="/{{$org->slug}}/{{$flatplan->slug}}/back/edit">EDIT</a></p>
 		</div>
 		
+	</div>
+	<div class="flatplan-invisible-page">
 	</div>
 </div>
 

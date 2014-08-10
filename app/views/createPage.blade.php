@@ -15,11 +15,13 @@
 <?php $colors = array('white'=>'White', 'whitesmoke'=>'Grey', 'blue'=>'Blue', 'red'=>'Red', 'blueviolet'=>'Violet'); ?>
 {{Form::open(array('url'=>'/'.$org->slug.'/'.$flatplan->slug.'/create-page', 'method'=>'POST', 'class'=>'fp-form'));}}
 	<div class="form-line">
-		<p>Creating pages {{count($flatplan->pages)-3}} and {{count($flatplan->pages)-2}} as a spread</p>
+		<p>Creating pages {{count($flatplan->pages)-3}} and {{count($flatplan->pages)-2}}</p>
 	</div>
 	<div class="form-line">
-		{{Form::label('slug', 'Slug: ');}}
-		{{Form::text('slug', '', array('class'=>'flat-text', 'size'=>'50'));}}
+		{{Form::label('slug', 'Slug (15 characters max): ');}}
+		{{Form::text('slug', '', array('class'=>'flat-text', 'size'=>'30', 'maxlength'=>'15'));}}
+	</div>
+	<div class="form-line">
 		{{Form::label('color', 'Color: ');}}
 		{{Form::select('color', $colors, 'White', array('class'=>'flat-select'))}}
 	</div>
@@ -30,7 +32,7 @@
 		{{Form::textarea('notes', '', array('class'=>'flat-text-area'));}}
 	</div>
 	<div class="form-line">
-		{{Form::submit('Create');}}
+		{{Form::submit('Create', array('class'=>'flat-button'));}}
 	</div>
 {{ Form::close() }}
 @stop

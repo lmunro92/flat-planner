@@ -11,13 +11,13 @@
 <div class="page-block">
 	<div class="nameplate">
 		<div class="nameplate-image">
-			<img src="{{{$org->image_url}}}" alt="{{{$org->name}}}" />
+			<img src="{{$org->image_url}}" alt="{{{$org->name}}}" />
 		</div>
 		<div class="nameplate-name">
 			<h2>{{{$org->name}}}</h2>
 		</div> 
 		<div class="nameplate-vitals">
-			<p>{{{$org->city}}}, {{{$org->state}}}, {{{$org->country}}}</p>
+			<p>{{{$org->city}}}, {{{$org->state}}} {{{$org->country}}}</p>
 			<p>{{{$org->description}}}</p>
 		</div>
 		@if($permission == 'edit')
@@ -49,7 +49,7 @@
 		<div class="list-line">
 			<div class="list-col-delete">
 				@if($permission == 'edit')
-					<p class="delete-x"><a href="/{{$org->slug}}/remove">X</a></p>
+					<p class="delete-x"><a href="/{{$org->slug}}/{{$role->user->username}}/remove">X</a></p>
 				@endif
 			</div>
 			<div class="list-col">
@@ -84,7 +84,7 @@
 				Edit
 			</div>
 			<div class="add-member-line">
-				{{Form::submit('Add User')}}
+				{{Form::submit('Add User', array('class'=>'flat-button'))}}
 			</div>
 		{{Form::close()}}
 		@endif

@@ -41,7 +41,7 @@
 		{{Form::textarea('description', '', array('class'=>'flat-text-area'));}}
 	</div>
 	<div class="form-line">
-		{{Form::submit('Create');}}
+		{{Form::submit('Create', array('class'=>'flat-button'));}}
 	</div>
 {{ Form::close() }}
 @stop

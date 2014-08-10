@@ -9,8 +9,9 @@ Flat-Planner
 	<div class="welcome-wrap">
 		<div class="welcome">
 			<h1>Welcome to Flat-Planner</h1>
-			<h2> A collaborative editorial planning app</h2>
+			<h2>A collaborative editorial planning app</h2>
 		</div>
+			<a href='/signup' class="get-started">create an account</a>
 		<div class="welcome-message">
 			<p>Flat-planner offers online tracking of magazines, with a familiar flat-plan or book map interface. It allows you to keep track of your entire project online, without having to share documents and budgets between remote offices.</p> 
 			<p>It has a number of features to help your team:</p>

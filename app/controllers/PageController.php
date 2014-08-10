@@ -3,7 +3,8 @@
 class PageController extends \BaseController {
 
 	private $rules = array(
-		'image'=>'url'
+		'image'=>'url',
+		'slug'=>'max:15'
 		);
 
 	public function __contruct()
@@ -70,7 +71,12 @@ class PageController extends \BaseController {
 		else{
 			$page = new Page();
 			$page->page_number = count($flatplan->pages)-3;
-			$page->slug = Input::get('slug');
+			if(Input::get('slug')){
+				$page->slug = Input::get('slug');
+			}
+			else{ 
+				$page->slug = ' ';
+			}
 			$page->notes = Input::get('notes');
 			$page->color = Input::get('color');
 			$page->image_url = Input::get('image');
@@ -88,6 +94,7 @@ class PageController extends \BaseController {
 			$page->save();
 			$pageOpp->spread_page_id = $page->id;
 			$pageOpp->save();
+			parent::renumber_pages($flatplan);
 			return Redirect::to('/'.$org->slug.'/'.$flatplan->slug)->with('flash_message', 'Page added');
 		}
 	}

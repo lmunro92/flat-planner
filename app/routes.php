@@ -24,7 +24,12 @@
 */
 
 Route::get('/', function(){
+	if(Auth::check()){
+		return Redirect::to('/user/'.Auth::user()->username);
+	}
+	else{
 	return View::make('welcome');
+	}
 });
 
 
@@ -43,8 +48,8 @@ Route::get('/{slug}', 'OrganizationController@getOrganization');
 Route::get('/{slug}/edit', 'OrganizationController@getEdit');
 Route::put('/{slug}/edit', 'OrganizationController@putEdit');
 Route::post('/{slug}/add-member', 'OrganizationController@postAddMember');
-Route::get('/{slug}/remove', 'OrganizationController@getConfirmDelete');
-Route::delete('{slug}/remove', 'OrganizationController@deleteOrganization');
+Route::get('/{slug}/{user}/remove', 'OrganizationController@getConfirmDelete');
+Route::delete('{slug}/{user}/remove', 'OrganizationController@deleteRole');
 
 ### FlatplanController
 Route::get('/{slug}/create-flatplan/', 'FlatplanController@getCreateFlatplan');
