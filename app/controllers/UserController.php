@@ -20,15 +20,6 @@ class UserController extends \BaseController {
 		$this->beforeFilter('auth', array('only' => array('edit', 'update', 'getLogout', 'index')));
 	}
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
-	public function index()
-	{
-			return Redirect::to('/user/'.Auth::user()->username);
-	}
 
 
 	/**
@@ -36,7 +27,7 @@ class UserController extends \BaseController {
 	 *
 	 * @return Response
 	 */
-	public function create()
+	public function getCreateUser()
 	{
 		return View::make('createUser');
 	}
@@ -47,7 +38,7 @@ class UserController extends \BaseController {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function postCreateUser()
 	{
 		$validator = Validator::make(Input::all(), $this->rules);
 		if($validator->fails()){
@@ -115,7 +106,7 @@ class UserController extends \BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function show($username)
+	public function getViewUser($username)
 	{
 		try{
 			$user = User::whereUsername($username)->firstOrFail();
@@ -143,7 +134,7 @@ class UserController extends \BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function edit($username)
+	public function getEditUser($username)
 	{
 		try{
 			$user = User::whereUsername($username)->firstOrFail();
@@ -166,7 +157,7 @@ class UserController extends \BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($username)
+	public function putEditUser($username)
 	{
 		try{
 			$user = User::whereUsername($username)->firstorFail();
@@ -193,18 +184,6 @@ class UserController extends \BaseController {
 		$user->bio = Input::get('profile');
 		$user->save();
 		return Redirect::to('/user/'.$username)->with('flash_message', 'Update successful');
-	}
-
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		//
 	}
 
 	/**

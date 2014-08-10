@@ -57,6 +57,7 @@ Route::get('/debug', function() {
     echo '<h1>Test Database Connection</h1>';
     try {
         $results = DB::select('SHOW DATABASES;');
+
         echo '<strong style="background-color:green; padding:5px;">Connection confirmed</strong>';
         echo "<br><br>Your Databases:<br><br>";
         print_r($results);
@@ -79,10 +80,12 @@ Route::get('/', function(){
 	}
 });
 
-
-### UserController (RESTful)
-Route::resource('user', 'UserController');
-### UserController (other)
+### UserController
+Route::get('/create-user', 'UserController@getCreateUser');
+Route::post('/create-user', 'UserController@postCreateUser');
+Route::get('/user/{username}', 'UserController@getViewUser');
+Route::get('/user/{username}/edit', array('before'=>'auth', 'uses'=>'UserController@getEditUser'));
+Route::put('/user/{username}/edit', array('before'=>'auth', 'uses'=>'UserController@putEditUser'));
 Route::get('/signup', array('before'=>'guest', 'uses'=>'UserController@create'));
 Route::get('/login', array('before'=>'guest', 'uses'=>'UserController@getLogin'));
 Route::post('/login', array('before'=>'guest', 'uses'=>'UserController@postLogin'));

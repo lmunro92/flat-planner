@@ -6,7 +6,7 @@
 @stop
 
 @section('content')
-{{Form::open(array('url'=>'/user/'.$user['username'], 'method'=>'PUT', 'class'=>'fp-form'))}}
+{{Form::open(array('url'=>'/user/'.$user['username'].'/edit', 'method'=>'PUT', 'class'=>'fp-form'))}}
 	<div class="form-line">
 		{{Form::label('first-name', 'First Name: ')}}
 		{{Form::text('first-name', $user['first_name'], array('class'=>'flat-text', 'size'=>'20'))}}

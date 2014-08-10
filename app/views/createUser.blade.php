@@ -11,7 +11,7 @@
 		<p class="error-message">{{$error->message}}</p>
 	@endforeach
 </div>
-{{Form::open(array('url'=>'/user/store', 'method'=>'POST', 'class'=>'fp-form'))}}
+{{Form::open(array('url'=>'/create-user', 'method'=>'POST', 'class'=>'fp-form'))}}
 	<div class="form-line">
 		{{Form::label('first-name', 'First Name: ')}}
 		{{Form::text('first-name', '', array('class'=>'flat-text', 'size'=>'20'))}}
