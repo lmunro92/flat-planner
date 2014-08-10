@@ -242,7 +242,11 @@ p.copyright {
 }
 
 .nameplate-image {
+ 	width: 100%;
+}
 
+div.nameplate-image img {
+	width: 100%;
 }
 
 .nameplate-name{

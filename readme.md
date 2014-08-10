@@ -18,7 +18,7 @@ username: `dwa15`
 
 password: `NorthwestB103`
 
-There will be an example flatplan with a number of pages and assignments made.
+There will be an example flatplan with a number of pages and assignments made already.
 
 ##Outside Code
 [Adobe Typekit](http://typekit.com): Fonts are Futura PT and Adriene 

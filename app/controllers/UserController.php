@@ -27,7 +27,7 @@ class UserController extends \BaseController {
 	 */
 	public function index()
 	{
-			return Redirect::to('user/'.Auth::user()->username);
+			return Redirect::to('/user/'.Auth::user()->username);
 	}
 
 
