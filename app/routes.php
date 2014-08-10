@@ -86,7 +86,7 @@ Route::post('/create-user', 'UserController@postCreateUser');
 Route::get('/user/{username}', 'UserController@getViewUser');
 Route::get('/user/{username}/edit', array('before'=>'auth', 'uses'=>'UserController@getEditUser'));
 Route::put('/user/{username}/edit', array('before'=>'auth', 'uses'=>'UserController@putEditUser'));
-Route::get('/signup', array('before'=>'guest', 'uses'=>'UserController@create'));
+Route::get('/signup', array('before'=>'guest', 'uses'=>'UserController@getCreateUser'));
 Route::get('/login', array('before'=>'guest', 'uses'=>'UserController@getLogin'));
 Route::post('/login', array('before'=>'guest', 'uses'=>'UserController@postLogin'));
 Route::get('/logout', array('uses'=>'UserController@getLogout'));
