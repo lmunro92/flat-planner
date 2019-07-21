@@ -4,6 +4,7 @@
 	"keywords": ["framework", "laravel"],
 	"license": "MIT",
 	},
+{
 	"autoload": {
 		"classmap": [
 			"app/commands",
