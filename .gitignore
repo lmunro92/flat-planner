@@ -1,7 +1,6 @@
 /bootstrap/compiled.php
 composer.lock
 composer.phar
-composer.json
 /vendor
 .env.*.php
 .env.php
