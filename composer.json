@@ -1,14 +1,5 @@
 {
-	"name": "laravel/laravel",
-	"description": "The Laravel Framework.",
-	"keywords": ["framework", "laravel"],
-	"license": "MIT",
-	"require": {
-		
-	},
-	"require-dev": {
-		
-	},
+
 	"autoload": {
 		"classmap": [
 			"app/commands",
